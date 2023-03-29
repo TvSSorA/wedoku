@@ -10,7 +10,10 @@
 
 ##### Để merge vào master:
 
-`git merge master`
+```
+git checkout master
+git merge testing
+```
 
 ##### Để undo lại về commit gần nhất:
 
