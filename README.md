@@ -1,38 +1,23 @@
-# create-svelte
+## Để clone project về:
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+`git clone https://github.com/TvSSorA/wedoku` và mở directory đó bằng bất kỳ text editor mong muốn.
 
-## Creating a project
+Sau khi clone, nhớ `pnpm install` để tải các dependencies (tool/extension dùng trong dự án như scss, typescript,...). Mặc định t không up nguyên folder chứa dependencies lên vì nó khá nặng.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Để cập nhật các commit/dependencies mới:
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+`git pull` 
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+`pnpm update --latest`
 
-## Developing
+Khuyến khích mỗi ngày làm 2 cái trên 1 lần để thường xuyên update các commit/deps mới.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Để đưa commit mới lên repo:
 
-```bash
-npm run dev
+`git push --force` hoặc dùng **Git/GitHub extension** trong VScode. (Sau khi cài Git tự khắc VScode sẽ tìm thấy)
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+## Để host trên localhost và bắt đầu code:
 
-## Building
+`npm run dev -- --open`. Svelte sẽ host file của dự án trên `localhost:5173` và mở browser.
+`npm run dev` nếu muốn tự dùng browser khác để mở.
 
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
