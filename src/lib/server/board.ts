@@ -19,6 +19,7 @@ export class Sudoku {
     fillValues() {
         this.fillDiagonal();
         this.fillRemaining(0, this.SRN);
+        this.removeDigits();
     }
 
     unusedInBox(rowStart: number, colStart: number, num: number) {
@@ -105,6 +106,22 @@ export class Sudoku {
         }
 
         return false;
+    }
+
+    removeDigits() {
+        let count = this.K
+
+        while (count !== 0) {
+            let i = Math.floor(Math.random() * this.N)
+            let j = Math.floor(Math.random() * this.N)
+
+            if (this.board[i][j] !== 0) {
+                count--;
+                this.board[i][j] = 0
+            }
+        }
+
+        return;
     }
  
     printBoard() {
