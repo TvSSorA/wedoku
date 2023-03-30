@@ -129,5 +129,9 @@ export class Sudoku {
             console.log(this.board[i].join(" "));
         }
     }
+
+    toArray() {
+        return this.board;
+    }
 }
 
