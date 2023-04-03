@@ -35,7 +35,10 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"pnpm": "^8.1.0",
-		"sass": "^1.60.0"
+		"@fortawesome/free-solid-svg-icons": "^6.4.0",
+		"agnostic-svelte": "^1.1.27",
+		"sass": "^1.60.0",
+		"svelte-fa": "^3.0.3",
+		"svelte-select": "^5.5.2"
 	}
 }
