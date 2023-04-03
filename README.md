@@ -1,8 +1,12 @@
 # NOTE KHI LÀM VIỆC VỚI REPO:
 
-Để tránh vật lộn với bug, repo này sẽ có 2 branch: 
-- `testing`: Branch dùng để test. **Tất cả trừ CTO** (me xd) khi muốn push commit mới phải push vào đây trước. CTO sẽ test thử xem có vừa ý và có bug không, khi nào hợp lý mới merge vào master.
+Để tránh vật lộn với bug, repo này sẽ có 4 branch riêng cho 4 người: 
+- `adam`
+- `tuan-minh`
+- `lam-anh`
 - `master`: Branch chính, chứa tất cả commit được finalize.
+
+**Tất cả trừ CTO** (me xd) khi muốn push commit mới phải push vào branch riêng của mình trước. CTO sẽ test xem có vừa ý và có bug không, khi nào hợp lý mới merge vào master.
 
 ##### Để chuyển sang branch khác:
 
@@ -13,18 +17,20 @@
 ```
 git checkout master
 git merge testing
+
+Hoặc pull request ở trên đây.
 ```
 
 ##### Để undo lại về commit gần nhất:
 
 `git reset --hard HEAD`
 
-##### Để lấy tất cả commit từ master vào testing:
+##### Để lấy tất cả commit từ master vào branch của mình:
 
 ```
 git checkout master
 git pull
-git checkout testing
+git checkout {tên_branch_của_mình}
 git rebase master
 ```
 
@@ -44,7 +50,7 @@ Khuyến khích mỗi ngày làm 2 cái trên 1 lần để thường xuyên upd
 
 ##### Để đưa commit mới lên repo:
 
-`git push --force` hoặc dùng **Git/GitHub extension** trong VScode. (Sau khi cài Git tự khắc VScode sẽ tìm thấy)
+`git push` hoặc dùng **Git/GitHub extension** trong VScode. (Sau khi cài Git tự khắc VScode sẽ tìm thấy)
 
 ##### Để host trên localhost và bắt đầu code:
 
