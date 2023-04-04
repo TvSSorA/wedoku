@@ -1,7 +1,7 @@
 // Import the functions we need from the SDKs
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 // Initialize Firebase
 /// Init Firebase app
@@ -55,6 +55,10 @@ deletingUserForm.addEventListener('submit', (e) => {
         })
 
 })
+
+/// Updating a User data
+/// 
+const updaingUser = doc();
 
 /// Init Analytics
 ///const analytics = getAnalytics(app);
