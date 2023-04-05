@@ -27,9 +27,7 @@
 		<SudokuBoard board={data.board} />
 	</div>
 
-	<div class="buttons-wrapper">
-		<Controller />
-	</div>
+	<Controller />
 </div>
 
 <style lang="scss">
@@ -55,15 +53,6 @@
 						font-family: var(--agnostic-font-family-body);
 					}
 				}
-			}
-		}
-
-		.buttons-wrapper {
-			display: flex;
-			flex-direction: column;
-
-			:global {
-				--agnostic-btn-primary: #{$numeric-button-color};
 			}
 		}
 	}

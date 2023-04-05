@@ -32,9 +32,9 @@
 	};
 </script>
 
-<fieldset class={fieldsetClasses()}>
+<fieldset id={id} class={fieldsetClasses()}>
 	<legend class={legendClasses}>{legend}</legend>
-	<input type="hidden" value={checked} on:blur on:input on:focus {...$$restProps} />
+	<input type="hidden" value={checked} name={name} on:blur on:input on:focus {...$$restProps} />
 	{#each choices as { value, label } (value)}
 		<Button
 			isBordered={value !== checked}
