@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@fortawesome/free-regular-svg-icons': ^6.4.0
   '@fortawesome/free-solid-svg-icons': ^6.4.0
   '@playwright/test': ^1.32.1
   '@sveltejs/adapter-auto': ^2.0.0
@@ -25,6 +26,7 @@ specifiers:
   vitest: ^0.29.8
 
 dependencies:
+  '@fortawesome/free-regular-svg-icons': 6.4.0
   '@fortawesome/free-solid-svg-icons': 6.4.0
   agnostic-svelte: 1.1.27_svelte@3.58.0
   sass: 1.60.0
@@ -301,6 +303,14 @@ packages:
     resolution: {integrity: sha512-HNii132xfomg5QVZw0HwXXpN22s7VBHQBv9CeOu9tfJnhsWQNd2lmTNi8CSrnw5B+5YOmzu1UoPAyxaXsJ6RgQ==}
     engines: {node: '>=6'}
     requiresBuild: true
+    dev: false
+
+  /@fortawesome/free-regular-svg-icons/6.4.0:
+    resolution: {integrity: sha512-ZfycI7D0KWPZtf7wtMFnQxs8qjBXArRzczABuMQqecA/nXohquJ5J/RCR77PmY5qGWkxAZDxpnUFVXKwtY/jPw==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.4.0
     dev: false
 
   /@fortawesome/free-solid-svg-icons/6.4.0:

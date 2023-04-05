@@ -16,9 +16,8 @@
 		<Button isBlock isBordered>Learn</Button>
 		<Button isBlock isBordered>News</Button>
 		<Button isBlock isBordered>Social</Button>
-		<Button isBlock isBordered mode="primary">Get Diamond Membership</Button>
+		<Button isBlock isBordered mode="primary">Premium</Button>
 	</div>
-
 	<div class="footer-buttons">
 		<Button isBlock>Settings</Button>
 		<Button isBlock>Help</Button>
@@ -67,7 +66,7 @@
 		width: 10vw;
 		height: 100vh;
 		z-index: 99;
-
+	
 		//background-color: $menu-color;
 		img {
 			width: 80%;
@@ -88,31 +87,6 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-		}
-
-		.btn {
-			&:hover {
-				color: black;
-
-				&:after {
-					transform: skewX(-45deg) scale(1, 1);
-					-webkit-transition: all 0.5s;
-					transition: all 0.5s;
-				}
-			}
-
-			&:after {
-				content: "";
-				background: white;
-				position: absolute;
-				z-index: -1;
-				left: -20%;
-				right: -20%;
-				top: 0;
-				bottom: 0;
-				transform: skewX(-45deg) scale(0, 1);
-				transition: all 0.5s;					
-			}
 		}
 	}
 

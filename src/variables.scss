@@ -1,8 +1,14 @@
 /* Variables and mixins declared here will be available in all other SCSS files */
 
-$background-color: rgb(111, 255, 111);
-$menu-color: white; 
+
+$dark-background-color: #1A202C;
+$light-background-color: #E7EFEA;
+$primary-color: #ff5757;
+$light-secondary-color: #2E4147;
+
+
 
 $board-border-color: black;
 $cell-border-color: grey;
 
+$numeric-button-color: #E476FF;
