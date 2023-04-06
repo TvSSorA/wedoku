@@ -1,56 +1,71 @@
 <script>
 	import '../app.scss';
-	import 'agnostic-svelte/css/common.min.css';
-	import Fa from "svelte-fa";
-	import { faCircle } from "@fortawesome/free-solid-svg-icons";
-	import { Button, Disclose } from "agnostic-svelte";
+	import Fa from 'svelte-fa';
+	import FriendsList from "$lib/components/FriendsList.svelte";
+	import { faPlay, faBook, faNewspaper, faShareNodes, faGem, faGear, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+	import { SvelteUIProvider, Button, theme } from '@svelteuidev/core';
+	import { setContext } from "svelte";
+	import { writable } from "svelte/store";
+
+	const darkMode = writable(true);
+	setContext("darkMode", darkMode);
 </script>
 
-<section id="bg" />
+<SvelteUIProvider
+	withNormalizeCSS
+	withGlobalStyles
+	themeObserver={$darkMode ? "dark" : "light"}
+>
+	<section id="bg" style="background-color: {theme.colors["dark700"].computedValue}"/>
 
-<section class="menu">
-	<img src="/favicon.png" alt="Logo">
+	<section class="menu">
+		<img src="/favicon.png" alt="Logo" />
 
-	<div class="main-buttons">
-		<Button isBlock isBordered mode="secondary">Play</Button>
-		<Button isBlock isBordered>Learn</Button>
-		<Button isBlock isBordered>News</Button>
-		<Button isBlock isBordered>Social</Button>
-		<Button isBlock isBordered mode="primary">Premium</Button>
-	</div>
-	<div class="footer-buttons">
-		<Button isBlock>Settings</Button>
-		<Button isBlock>Help</Button>
-	</div>
-</section>
-
-<main>
-	<slot />
-</main>
-
-<section class="friends">
-	<Disclose isBackground title="Friends">
-		<div class="user">
-			<img src="/favicon.png" alt="Avatar">
-			<p class="username">lorem ipsum</p>
-			<Fa icon={faCircle} size="xs" scale={0.7} translateX={0.5} style="color: #04ff00;"  />
+		<div class="main-buttons">
+			<Button color="red" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faPlay} />
+				Play
+			</Button>
+			<Button color="dark" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faBook} />
+				Learn
+			</Button>
+			<Button color="dark" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faNewspaper} />
+				News
+			</Button>
+			<Button color="dark" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faShareNodes} />
+				Social
+			</Button>
+			<Button color="blue" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faGem} />
+				Premium
+			</Button>
 		</div>
-		<div class="user">
-			<img src="/favicon.png" alt="Avatar">
-			<p class="username">lorem ipsum</p>
-			<Fa icon={faCircle} size="xs" scale={0.7} translateX={0.5} style="color: #FF2D00;"  />
+		<div class="footer-buttons">
+			<Button color="dark" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faGear} />
+				Settings
+			</Button>
+			<Button color="dark" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faCircleQuestion} />
+				Help
+			</Button>
 		</div>
-		<div class="user">
-			<img src="/favicon.png" alt="Avatar">
-			<p class="username">lorem ipsum</p>
-			<Fa icon={faCircle} size="xs" scale={0.7} translateX={0.5} style="color: #FF9E00;"  />
-		</div>
-	</Disclose>
-</section>
+	</section>
+
+	<main>
+		<slot />
+	</main>
+
+	<section class="friends">
+		<FriendsList />
+	</section>
+</SvelteUIProvider>
 
 <style lang="scss">
 	#bg {
-		background-color: var(--agnostic-light); //$background-color;
 		position: fixed;
 		width: 100vw;
 		height: 100vh;
@@ -61,12 +76,13 @@
 		flex-direction: column;
 		justify-content: space-between;
 		align-items: center;
+		overflow-y: hidden;
 
 		position: absolute;
 		width: 10vw;
 		height: 100vh;
 		z-index: 99;
-	
+
 		//background-color: $menu-color;
 		img {
 			width: 80%;
@@ -77,10 +93,6 @@
 			flex-direction: column;
 			justify-content: center;
 			width: 100%;
-
-			:global(.btn) {
-				white-space: pre-wrap;
-			}
 		}
 
 		.footer-buttons {
@@ -100,25 +112,5 @@
 		overflow: hidden;
 
 		//background-color: $menu-color;
-
-		.user {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			gap: 0.5vw;
-
-			img {
-				max-width: 30%;
-			}
-
-			.username {
-				font-size: 80%;
-				text-overflow: ellipsis;
-			}
-		}
 	}
 </style>
-
-
-
-

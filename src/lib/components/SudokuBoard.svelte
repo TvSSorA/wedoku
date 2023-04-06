@@ -1,4 +1,9 @@
 <script lang="ts">
+	import { theme, Text } from '@svelteuidev/core';
+	import { getContext } from 'svelte';
+	import { cellStyles } from './ColorScheme';
+	import type { Readable } from 'svelte/store';
+
 	export let board: number[][];
 	export let selected: Record<'row' | 'col' | 'block', number | null> = {
 		row: null,
@@ -6,22 +11,20 @@
 		block: null
 	};
 
-	function getHighlightStyle(
-		row: number,
-		col: number,
-		block: number,
-		selected: Record<'row' | 'col' | 'block', number | null>,
-		type: 'bg' | 'digit'
-	) {
+	const darkMode: Readable<boolean> = getContext('darkMode');
+	let hl1: string, hl2: string;
+	$: ({ hl1, hl2 } = cellStyles($darkMode));
+
+	$: getHighlightStyle = (row: number, col: number, block: number, type: 'bg' | 'digit') => {
 		const isSelectedCell = selected.row === row && selected.col === col;
 		const isSelectedSiblings =
 			selected.row === row || selected.col === col || selected.block === block;
 
 		if (type === 'bg') {
-			if (isSelectedCell) return 'background-color: var(--agnostic-primary-light);';
-			if (isSelectedSiblings) return 'background-color: var(--agnostic-gray-mid);';
+			if (isSelectedCell) return `background-color: ${hl1};`;
+			if (isSelectedSiblings) return `background-color: ${hl2};`;
 		}
-	}
+	};
 </script>
 
 <div class="board">
@@ -36,14 +39,18 @@
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
 						class="cell row-{row} col-{col}"
-						style={getHighlightStyle(row, col, block, selected, 'bg')}
+						style={getHighlightStyle(row, col, block, 'bg')}
 						on:click={() => {
 							selected = { row, col, block };
 						}}
 					>
-						<span class="digit" style={getHighlightStyle(row, col, block, selected, 'digit')}>
+						<Text
+							size={35}
+							color="dark"
+							override={{ userSelect: "none" }}
+						>
 							{board[row][col] === 0 ? '' : board[row][col]}
-						</span>
+						</Text>
 					</div>
 				{/each}
 			{/each}
