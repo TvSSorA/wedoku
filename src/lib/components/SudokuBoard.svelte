@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { theme, Text } from '@svelteuidev/core';
+	import { Text } from '@svelteuidev/core';
 	import { getContext } from 'svelte';
 	import { cellStyles } from './ColorScheme';
 	import type { Readable } from 'svelte/store';
@@ -13,8 +13,8 @@
 
 	const darkMode: Readable<boolean> = getContext('darkMode');
 	let hl1: string, hl2: string;
-	$: ({ hl1, hl2 } = cellStyles($darkMode));
 
+	$: ({ hl1, hl2 } = cellStyles($darkMode));
 	$: getHighlightStyle = (row: number, col: number, block: number, type: 'bg' | 'digit') => {
 		const isSelectedCell = selected.row === row && selected.col === col;
 		const isSelectedSiblings =
@@ -49,7 +49,7 @@
 							color="dark"
 							override={{ userSelect: "none" }}
 						>
-							{board[row][col] === 0 ? '' : board[row][col]}
+							{board[row][col] || ""}
 						</Text>
 					</div>
 				{/each}
