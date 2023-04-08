@@ -30,8 +30,12 @@
 </script>
 
 <div class="friends-list-container">
-	<Button fullSize radius={0} color="gray" on:click={() => (opened = !opened)}>
-		<Text>Friends</Text>
+	<Button
+		fullSize radius={0} color="gray"
+		override={{ fontSize: "1rem" }}
+		on:click={() => (opened = !opened)}
+	>
+		Friends
 		<Burger slot="rightIcon" {opened} />
 	</Button>
 	{#if opened}

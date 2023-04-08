@@ -19,15 +19,15 @@
 		<Fa slot="leftIcon" icon={faPlay} />
 		Play
 	</Button>
-	<Button color="dark" radius={0} variant="subtle">
+	<Button color="gray" radius={0} variant="subtle">
 		<Fa slot="leftIcon" icon={faBook} />
 		Learn
 	</Button>
-	<Button color="dark" radius={0} variant="subtle">
+	<Button color="gray" radius={0} variant="subtle">
 		<Fa slot="leftIcon" icon={faNewspaper} />
 		News
 	</Button>
-	<Button color="dark" radius={0} variant="subtle">
+	<Button color="gray" radius={0} variant="subtle">
 		<Fa slot="leftIcon" icon={faShareNodes} />
 		Social
 	</Button>
@@ -37,11 +37,11 @@
 	</Button>
 </div>
 <div class="footer-buttons">
-	<Button color="dark" radius={0} variant="subtle">
+	<Button color="gray" radius={0} variant="subtle">
 		<Fa slot="leftIcon" icon={faGear} />
 		Settings
 	</Button>
-	<Button color="dark" radius={0} variant="subtle">
+	<Button color="gray" radius={0} variant="subtle">
 		<Fa slot="leftIcon" icon={faCircleQuestion} />
 		Help
 	</Button>
