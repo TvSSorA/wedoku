@@ -10,8 +10,6 @@
 		faGear,
 		faCircleQuestion
 	} from '@fortawesome/free-solid-svg-icons';
-
-    
 </script>
 
 <img src="/favicon.png" alt="Logo" />

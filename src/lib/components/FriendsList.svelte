@@ -42,9 +42,10 @@
 					<Text override={{ fontSize: '$xs', overflow: "hidden", textOverflow: "ellipsis"}}>{name}</Text>
 					<Fa
 						class="status"
-						size="xs"
+						size="0.5x"
 						icon={faCircle}
 						color={statusColor[status]}
+						style="margin-left: auto"
 					/>
 				</div>
 			{/each}
@@ -71,11 +72,6 @@
 				img {
 					height: 100%;
 					aspect-ratio: 1;
-				}
-				:global {
-					.status {
-						margin-left: auto;
-					}
 				}
 			}
 		}
