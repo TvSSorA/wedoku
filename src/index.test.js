@@ -5,6 +5,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, getDoc, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, where, serverTimestamp, createUserWithEmailAndPassword} from "firebase/firestore";
 import { getAuth, signInWithPopup, signOut, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
+import { getFirestore, collection, getDoc, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, where, serverTimestamp, createUserWithEmailAndPassword} from "firebase/firestore";
+import { getAuth, signInWithPopup, signOut, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
 
 // Initialize Firebase
 /// Init Firebase app
@@ -13,13 +15,24 @@ const app = initializeApp(firebaseConfig);
 /// Init Firestore Service
 const db = getFirestore()
 const auth = getAuth()
+const auth = getAuth()
 
 /// Collection Ref
 const colRef = collection(db, 'Users');
 
 const q = query(colRef, orderBy('createdAt'))
 
+const q = query(colRef, orderBy('createdAt'))
+
 /// Get Collection Data
+/// Real time Collection data
+onSnapshot(colRef, (snapshot) => {
+    let Users = []
+    snapshot.docs.forEach((doc) => {
+        Users.push({ ...doc.data(), id: doc.id })
+    })
+    console.log(Users)
+})
 /// Real time Collection data
 onSnapshot(colRef, (snapshot) => {
     let Users = []
@@ -33,13 +46,14 @@ onSnapshot(colRef, (snapshot) => {
 /// All form when regarding the adding of a collectiong with the field, HTML and .js ALWAYS have to match the one on the Firebase DB
 
 /// To be revisted and repurposed
-const addColForm = document.querySelector('.add')  /// .add refers to the class or form (idk which) of the form in html. Col stands for Collection
+const addColForm = document.querySelector('.add')  /// .add refers to the class of the form in html. Col stands for Collection
 addColForm.addEventListener('submit', (e) => {     /// submit 
     e.preventDefault
 
     addDoc(colRef, {
         Username: addUserForm.Username.value,
         Password: addUserForm.Password.value,
+        createdAt: serverTimestamp(),
         createdAt: serverTimestamp(),
     })
     .then(() => {
@@ -48,7 +62,7 @@ addColForm.addEventListener('submit', (e) => {     /// submit
 })
 
 /// Signing up a new User
-const signUpForm = document.querySelector('.modal-signup')
+const signUpForm = document.querySelector('.signup')
 signUpForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
@@ -57,16 +71,11 @@ signUpForm.addEventListener('submit', (e) => {
 
     createUserWithEmailAndPassword(auth, email, password)
         .then((cred) => {
-            return db.collection('Users').doc(cred.user.uid).set({
-                username: signUpForm['signup-username'].value,        /// The .signup-username refers to the type in <input type="signup-user" name="email"> of HTML I think. Saw this sample from like Firebase 8 or smth. Lfmao
-                email: signUpForm['email'].value
-            })
+            console/log('User created:', cred.user)
+            signUpForm.reset()
         })
         .catch((err) => {
             console.log(err.message)
-        }).then(() => {
-            console/log('User created:', cred.user)
-            signUpForm.reset()
         })
 })
 
@@ -83,8 +92,6 @@ logoutButton.addEventListener('click', () => {
     })
 })
 
-
-/// Logging in
 const loginForm = document.querySelector('.login')
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault()
@@ -109,6 +116,10 @@ onAuthStateChanged(auth, (user) => {
 
 
 /// Deleting a User. This is use with a form
+/// All form when regarding the adding of a collectiong with the field, HTML and .js ALWAYS have to match the one on the Firebase DB
+
+/// To be revisted
+const deletingUserForm = document.querySelector('.delete')  /// .delete refers to the class of the form in html
 /// All form when regarding the adding of a collectiong with the field, HTML and .js ALWAYS have to match the one on the Firebase DB
 
 /// To be revisted
@@ -151,7 +162,32 @@ updatingUserForm.addEventListener('submit', (e) => {
 
 
 
+/// Get a single User data
+const docRef = doc(db, 'User', /**/)
+
+onSnapshot(docRef, (doc) => {
+    console.log(doc.data(), doc.id)
+})
+
+/// Updating a User data using Form
+/// All form when regarding the updating of a user with the field Username and Password, ALWAYS use Username & Password. DO NOT use the lowercase
+const updatingUserForm = document.querySelector('.update')  /// .update refers to the class of the form in html
+updatingUserForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    const docRef = doc(db, 'User', updatingUserForm.id.value)
+    
+    updateDoc(docRef, {
+        Username: 'updated usename'
+    })
+    .then(() => {
+        updatingUserForm.reset
+    })
+
+})
+
+
+
 
 /// Init Analytics
-///const analytics = getAnalytics(app);
->>>>>>> Comments update before testing
+///const analytics = getAnalytics(app);>>>>>>> Comments update before testing
