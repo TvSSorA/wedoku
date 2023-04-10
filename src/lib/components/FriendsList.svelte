@@ -22,17 +22,19 @@
 	];
 	let opened = false;
 
-    const statusColor: Record<string, string> = {
-        online: "lime",
-        idle: "red",
-        offline: "gray"
-    }
+	const statusColor: Record<string, string> = {
+		online: 'lime',
+		idle: 'red',
+		offline: 'gray'
+	};
 </script>
 
 <div class="friends-list-container">
 	<Button
-		fullSize radius={0} color="gray"
-		override={{ fontSize: "1rem" }}
+		fullSize
+		radius={0}
+		color="gray"
+		override={{ fontSize: '1rem' }}
 		on:click={() => (opened = !opened)}
 	>
 		Friends
@@ -43,7 +45,9 @@
 			{#each list as { name, avatar, status }}
 				<div class="friend">
 					<img src={avatar} alt="{name}'s avatar" />
-					<Text override={{ fontSize: '$xs', overflow: "hidden", textOverflow: "ellipsis"}}>{name}</Text>
+					<Text override={{ fontSize: '$xs', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+						{name}
+					</Text>
 					<Fa
 						class="status"
 						size="0.5x"
@@ -59,13 +63,16 @@
 
 <style lang="scss">
 	.friends-list-container {
-        display: flex;
-        flex-direction: column;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
 		.friends-list {
+			width: 100%;
 			display: flex;
 			flex-direction: column;
 			gap: 1rem;
 			.friend {
+				width: 100%;
 				height: 2.5rem;
 				display: flex;
 				flex-direction: row;

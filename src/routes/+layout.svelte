@@ -14,9 +14,12 @@
 	withNormalizeCSS 
 	withGlobalStyles 
 	themeObserver={$darkMode ? 'dark' : 'light'}
+	override={{
+		display: "flex",
+		flexDirection: "row",
+		gap: "4rem"
+	}}
 >
-	<section id="bg" style="background-color: {theme.colors['dark700'].computedValue}" />
-
 	<section class="menu">
 		<GameMenu />
 	</section>
@@ -31,37 +34,20 @@
 </SvelteUIProvider>
 
 <style lang="scss">
-	#bg {
+	/* #bg {
 		position: fixed;
 		width: 100vw;
 		height: 100vh;
 		z-index: -99;
+	} */
+
+	main {
+		width: 100%;
+		margin-top: 3rem;
 	}
 
-	.menu {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		align-items: center;
-		overflow-y: hidden;
-
-		position: absolute;
+	.menu, .friends {
 		width: 10vw;
 		height: 100vh;
-		z-index: 99;
-
-		//background-color: $menu-color;
-	}
-
-	.friends {
-		position: absolute;
-		right: 0;
-		top: 0;
-		width: 10vw;
-		height: 100vh;
-		z-index: 99;
-		overflow: hidden;
-
-		//background-color: $menu-color;
 	}
 </style>
