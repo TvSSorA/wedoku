@@ -17,7 +17,7 @@
 	override={{
 		display: "flex",
 		flexDirection: "row",
-		gap: "4rem"
+		gap: "4rem",
 	}}
 >
 	<section class="menu">
@@ -43,10 +43,13 @@
 
 	main {
 		width: 100%;
-		margin-top: 3rem;
+		height: 100%;
+		margin-top: 1rem;
 	}
 
 	.menu, .friends {
+		position: sticky;
+		top: 0;
 		width: 10vw;
 		height: 100vh;
 	}
