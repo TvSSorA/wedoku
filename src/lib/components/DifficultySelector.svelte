@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Button, Text, theme } from "@svelteuidev/core";
     import { getContext } from "svelte";
-    import { buttonStyles } from "./ColorScheme";
+    import { buttonStyles } from "$lib/frontend/ColorScheme";
     import type { Readable } from "svelte/store";
 
     export let selected: string;

@@ -9,7 +9,7 @@
 		faPlay,
 		faPause
 	} from '@fortawesome/free-solid-svg-icons';
-	import { buttonStyles } from './ColorScheme';
+	import { buttonStyles } from '$lib/frontend/ColorScheme';
 	import { getContext } from 'svelte';
 	import type { Readable } from 'svelte/store';
 

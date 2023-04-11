@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Text } from '@svelteuidev/core';
 	import { getContext } from 'svelte';
-	import { cellStyles } from './ColorScheme';
+	import { cellStyles } from '$lib/frontend/ColorScheme';
 	import type { Readable } from 'svelte/store';
 
 	export let board: number[][];
