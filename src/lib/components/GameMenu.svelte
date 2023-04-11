@@ -38,11 +38,11 @@
 		</Button>
 	</div>
 	<div class="footer-buttons">
-		<Button color="gray" radius={0} variant="subtle">
+		<Button fullSize color="gray" radius={0} variant="subtle">
 			<Fa slot="leftIcon" icon={faGear} />
 			Settings
 		</Button>
-		<Button color="gray" radius={0} variant="subtle">
+		<Button fullSize color="gray" radius={0} variant="subtle">
 			<Fa slot="leftIcon" icon={faCircleQuestion} />
 			Help
 		</Button>
