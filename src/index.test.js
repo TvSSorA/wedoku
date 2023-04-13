@@ -38,7 +38,7 @@ addColForm.addEventListener('submit', (e) => {     /// submit
 /// All form when regarding the adding of a collectiong with the field, HTML and .js ALWAYS have to match the one on the Firebase DB
 
 /// To be revisted and repurposed
-const addColForm = document.querySelector('.add')  /// .add refers to the class of the form in html. Col stands for Collection
+const addColForm = document.querySelector('.add')  /// .add refers to the class or form (idk which) of the form in html. Col stands for Collection
 addColForm.addEventListener('submit', (e) => {     /// submit 
     e.preventDefault
 
@@ -62,11 +62,16 @@ signUpForm.addEventListener('submit', (e) => {
 
     createUserWithEmailAndPassword(auth, email, password)
         .then((cred) => {
-            console/log('User created:', cred.user)
-            signUpForm.reset()
+            return db.collection('Users').doc(cred.user.uid).set({
+                username: signUpForm['signup-username'].value,        /// The .signup-username refers to the type in <input type="signup-user" name="email"> of HTML I think. Saw this sample from like Firebase 8 or smth. Lfmao
+                email: signUpForm['email'].value
+            })
         })
         .catch((err) => {
             console.log(err.message)
+        }).then(() => {
+            console/log('User created:', cred.user)
+            signUpForm.reset()
         })
 })
 
@@ -83,6 +88,8 @@ logoutButton.addEventListener('click', () => {
     })
 })
 
+
+/// Logging in
 const loginForm = document.querySelector('.login')
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault()
