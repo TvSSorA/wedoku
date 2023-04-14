@@ -1,7 +1,14 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { faUserGroup, faMessage, faLightbulb, faPencil, faKhanda, faBookTanakh } from '@fortawesome/free-solid-svg-icons';
-	import { Card, Text, Title, Anchor, Button, Tooltip } from '@svelteuidev/core';
+	import { faUserGroup, faMessage, faLightbulb } from '@fortawesome/free-solid-svg-icons';
+	import { Card, Text, Title, Image, Anchor, Button } from '@svelteuidev/core';
+	import Modal from '$lib/components/SignUpModal.svelte';
+
+	let showSignUpModal = false
+	let signupUsername = '';
+	let signupEmail = '';
+	let signupPassword = '';
+
 	const navicons = [faUserGroup, faMessage];
 </script>
 
@@ -28,13 +35,32 @@
 		<Title align="center" size={80} variant='gradient' gradient={{from: 'pink', to: 'grape', deg: 45}}>Wedoku</Title>
 		<Title align="center" size={20}>Experience Sudoku like never before.</Title>
 		<div class="welcome-signup">
-			<Button ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
-				LOGIN
-			</Button>
-			
-			<Button ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
-				SIGNUP
-			</Button>
+			<div id = "modal-signup" class = "modal">
+				<Button on:click={() => (showSignUpModal = true)} ripple variant="gradient" size={40} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
+					REGISTER
+				</Button>
+				<Modal bind:showSignUpModal>
+					<form id="signup-form">
+						<div class="input-field">
+							<label for="signup-password">Enter Username</label>
+							<input type="username" id="signup-username" required bind:value={signupUsername}/>
+						</div>
+						<div class="input-field">
+							<label for="signup-email">Email address</label>
+							<input type="email" id="signup-email" required bind:value={signupEmail}/>
+						</div>
+						<div class="input-field">
+							<label for="signup-password">Enter Password</label>
+							<input type="password" id="signup-password" required bind:value={signupPassword}/>
+						</div>
+						<button>Sign up</button>
+					</form>
+				</Modal>
+
+				<Text size={40}>/</Text>
+				<Button ripple variant="gradient" size={40} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
+					LOGIN
+				</Button>
 		</div>
 	</div>
 	

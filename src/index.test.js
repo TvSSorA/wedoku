@@ -46,7 +46,7 @@ addColForm.addEventListener('submit', (e) => {     /// submit
 })
 
 /// Signing up a new User
-const signUpForm = document.querySelector('.signup')
+const signUpForm = document.querySelector('.modal-signup')
 signUpForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
