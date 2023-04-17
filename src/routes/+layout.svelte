@@ -10,10 +10,10 @@
 	setContext('darkMode', darkMode);
 </script>
 
-<SvelteUIProvider 
-	withNormalizeCSS 
-	withGlobalStyles 
-	themeObserver={$darkMode ? 'dark' : 'light'}
+<SvelteUIProvider
+	withGlobalStyles
+	withNormalizeCSS
+	themeObserver={'dark'}
 	override={{
 		display: "flex",
 		flexDirection: "row",

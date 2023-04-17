@@ -5,6 +5,7 @@
 
 	export let data;
 
+	let boardComponent;
 	let difficulty: string = "easy";
 	$: console.log(difficulty);
 </script>
@@ -12,10 +13,10 @@
 <div class="game">
 	<div class="diff-board-wrapper">
 		<DifficultySelector bind:selected={difficulty}/>
-		<SudokuBoard board={data.board} />
+		<SudokuBoard bind:this={boardComponent} board={data.board} fullBoard={data.fullBoard}/>
 	</div>
 
-	<Controller />
+	<Controller board={boardComponent}/>
 </div>
 
 <style lang="scss">

@@ -11,18 +11,52 @@
 	} from '@fortawesome/free-solid-svg-icons';
 	import { buttonStyles } from '$lib/frontend/ColorScheme';
 	import { getContext } from 'svelte';
+
+	import type SudokuBoard from './SudokuBoard.svelte';
 	import type { Readable } from 'svelte/store';
+	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+	import type { ButtonVariant } from '@svelteuidev/core';
+
+	export let board: SudokuBoard;
 
 	let playing: boolean = true;
 	let note = false;
 	const darkMode: Readable<boolean> = getContext('darkMode');
 
 	let fg: string, hl: string;
-	$: ({fg, hl} = buttonStyles($darkMode));
-	
+	$: ({ fg, hl } = buttonStyles($darkMode));
+
 	const buttonCommonProps = {
 		color: '$grape500'
 	} as const;
+
+	let extraButtons: { icon: IconDefinition, label: string, variant: ButtonVariant, handler?: () => unknown }[];
+	$: extraButtons = [
+		{
+			icon: faArrowRotateLeft,
+			label: 'Undo',
+			variant: 'outline',
+			handler: () => board.undo()
+		},
+		{
+			icon: faEraser,
+			label: 'Erase',
+			variant: 'outline',
+			handler: () => board.eraseDigit()
+		},
+		{
+			icon: faLightbulb,
+			label: 'Hint',
+			variant: 'outline',
+			handler: () => board.hint()
+		},
+		{
+			icon: faPencil,
+			label: 'Note',
+			variant: note ? 'filled' : 'outline',
+			handler: () => (note = !note)
+		}
+	];
 </script>
 
 <div class="controller">
@@ -33,56 +67,36 @@
 			variant="outline"
 			color={fg}
 			radius={9999}
-			override={{ 
+			override={{
 				aspectRatio: 1,
 				'&:hover': { color: hl }
 			}}
-			on:click={() => {
-				playing = !playing;
-			}}
+			on:click={() => playing = !playing}
 		>
 			<Fa icon={playing ? faPlay : faPause} />
 		</Button>
 	</div>
 	<div class="game-buttons">
 		<div class="extra-buttons">
-			{#each [{ icon: faArrowRotateLeft, label: 'Undo' }, { icon: faEraser, label: 'Erase' }, { icon: faLightbulb, label: 'Hint' }] as { icon, label }}
+			{#each extraButtons as { icon, label, variant, handler }}
 				<div class="extra-button-wrapper">
 					<Button
-						variant="outline"
+						{variant}
 						color={fg}
 						radius={9999}
+						fullSize
 						override={{
 							aspectRatio: 1,
-							height: '100%',
-							'&:hover': { color: hl }
+							height: 'auto',
+							'&:hover': { color: (variant == "filled" ? "" : hl) }
 						}}
-						fullSize
+						on:click={handler}
 					>
 						<Fa {icon} fw size="1.5x" />
 					</Button>
 					<Text>{label}</Text>
 				</div>
 			{/each}
-			<div class="extra-button-wrapper">
-				<Button
-					variant={note ? 'filled' : 'outline'}
-					color={fg}
-					radius={9999}
-					override={{
-						aspectRatio: 1,
-						height: '100%',
-						'&:hover': { color: note ? "" : hl }
-					}}
-					fullSize
-					on:click={() => {
-						note = !note;
-					}}
-				>
-					<Fa icon={faPencil} fw size="1.5x" />
-				</Button>
-				<Text>Note</Text>
-			</div>
 		</div>
 		<div class="numeric-buttons">
 			{#each { length: 9 } as _, i}
@@ -90,12 +104,13 @@
 					variant="outline"
 					color={fg}
 					override={{
-						fontSize: "3rem",
+						fontSize: '3rem',
 						aspectRatio: 1,
 						height: '100%',
 						'&:hover': { color: hl }
 					}}
 					fullSize
+					on:click={() => board.insertDigit(i + 1)}
 				>
 					{i + 1}
 				</Button>

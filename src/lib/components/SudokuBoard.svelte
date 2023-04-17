@@ -5,11 +5,80 @@
 	import type { Readable } from 'svelte/store';
 
 	export let board: number[][];
-	export let selected: Record<'row' | 'col' | 'block', number | null> = {
+	export let fullBoard: number[][];
+
+	let currentBoard: number[][];
+	$: currentBoard = board.map(row => [...row]); // Clone the board
+
+	let selected: Record<'row' | 'col' | 'block', number | null> = {
 		row: null,
 		col: null,
 		block: null
 	};
+
+	let moves: string[] = [
+
+	]
+
+	export function insertDigit(digit: number)
+	{
+		const { row, col } = selected;
+		if (row === null || col === null) return;
+		if (board[row][col] !== 0) return;
+		if (currentBoard[row][col] === digit) return;
+
+		if (currentBoard[row][col] === 0) {
+			moves.unshift(`add ${row} ${col}`)
+		}
+		else {
+			moves.unshift(`replace ${row} ${col} ${currentBoard[row][col]} ${digit}`)
+		}
+		currentBoard[row][col] = digit;
+	}
+
+	export function eraseDigit()
+	{
+		const { row, col } = selected;
+		if (row === null || col === null) return;
+		if (board[row][col] !== 0) return;
+		if (currentBoard[row][col] === 0) return;
+
+		moves.unshift(`remove ${row} ${col} ${currentBoard[row][col]}`)
+		currentBoard[row][col] = 0;
+	}
+
+	export function undo() {
+		const moveToUndo = moves[0]
+		const sections: string[] = moveToUndo.split(' ')
+
+		if (sections[0] === 'add') {
+			currentBoard[parseInt(sections[1])][parseInt(sections[2])] = 0
+		}
+		else { // if it's remove or replace
+			currentBoard[parseInt(sections[1])][parseInt(sections[2])] = parseInt(sections[3])
+		}
+
+		moves.shift()
+	}
+
+	export function selectCell(row: number, col: number)
+	{
+		selected = {
+			row, col,
+			block: Math.floor(row / 3) * 3 + Math.floor(col / 3)
+		};
+	}
+
+	export function hint() {
+		const { row, col } = selected;
+		if (row === null || col === null) return;
+		if (board[row][col] !== 0) return;
+		if (currentBoard[row][col] === fullBoard[row][col]) return;
+
+		currentBoard[row][col] = fullBoard[row][col];
+		board[row][col] = fullBoard[row][col];
+		moves = moves.filter(move => parseInt(move.split(' ')[1]) === row && parseInt(move.split(' ')[2]) === col)
+	}
 
 	const darkMode: Readable<boolean> = getContext('darkMode');
 	let hl1: string, hl2: string;
@@ -31,25 +100,23 @@
 	{#each { length: 9 } as _, block}
 		{@const rowStartIdx = Math.floor(block / 3) * 3}
 		{@const colStartIdx = (block % 3) * 3}
-		<div class="block block-{block}">
+		<div class="block">
 			{#each { length: 3 } as _, i}
 				{#each { length: 3 } as _, j}
 					{@const row = rowStartIdx + i}
 					{@const col = colStartIdx + j}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
-						class="cell row-{row} col-{col}"
+						class="cell"
 						style={getHighlightStyle(row, col, block, 'bg')}
-						on:click={() => {
-							selected = { row, col, block };
-						}}
+						on:click={() => selectCell(row, col)}
 					>
 						<Text
 							size={35}
 							color="dark"
 							override={{ userSelect: "none" }}
 						>
-							{board[row][col] || ""}
+							{currentBoard[row][col] || ""}
 						</Text>
 					</div>
 				{/each}
@@ -82,13 +149,6 @@
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
-				.digit {
-					font-family: sans-serif;
-					font-size: 2.5rem;
-					user-select: none;
-					line-height: 1;
-					color: var(--agnostic-dark);
-				}
 			}
 		}
 	}

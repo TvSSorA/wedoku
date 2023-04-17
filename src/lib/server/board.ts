@@ -19,7 +19,6 @@ export class Sudoku {
     fillValues() {
         this.fillDiagonal();
         this.fillRemaining(0, this.SRN);
-        this.removeDigits();
     }
 
     unusedInBox(rowStart: number, colStart: number, num: number) {
