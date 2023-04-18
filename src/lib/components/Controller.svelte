@@ -10,7 +10,8 @@
 		faPause
 	} from '@fortawesome/free-solid-svg-icons';
 	import { buttonStyles } from '$lib/frontend/ColorScheme';
-	import { getContext } from 'svelte';
+	import { accurateInterval } from '$lib/utils';
+	import { getContext, onMount, onDestroy } from 'svelte';
 
 	import type SudokuBoard from './SudokuBoard.svelte';
 	import type { Readable } from 'svelte/store';
@@ -18,11 +19,10 @@
 	import type { ButtonVariant } from '@svelteuidev/core';
 
 	export let board: SudokuBoard;
-
-	let playing: boolean = true;
+	
 	let note = false;
-	const darkMode: Readable<boolean> = getContext('darkMode');
 
+	const darkMode: Readable<boolean> = getContext('darkMode');
 	let fg: string, hl: string;
 	$: ({ fg, hl } = buttonStyles($darkMode));
 
@@ -57,11 +57,47 @@
 			handler: () => (note = !note)
 		}
 	];
+
+	let playing: boolean = true;
+	let time: number = 0;
+	let cancelTimer: (() => void) | null;
+	
+	function formatTime(ms: number)
+	{
+		const s = Math.floor(ms / 1000);
+		const m = Math.floor(s / 60);
+		const h = Math.floor(m / 60);
+		return (h ? `${h       .toString().padStart(2, "0")}:` : "") +
+			   (    `${(m % 60).toString().padStart(2, "0")}:`     ) +
+			   (    `${(s % 60).toString().padStart(2, "0")}`      );
+	}
+
+	function zaWarudo() {
+		if (playing) {
+			cancelTimer!();
+			cancelTimer = null;
+		}
+		else {
+			cancelTimer = accurateInterval(() => time += 100, 100);
+		}
+
+		playing = !playing;
+	}
+
+	onMount(() => {
+		cancelTimer = accurateInterval(() => time += 100, 100);
+	})
+	onDestroy(() => {
+		if (cancelTimer) cancelTimer();
+	})
+	
 </script>
 
 <div class="controller">
 	<div class="time-and-play-button">
-		<Text root="h3" override={{ userSelect: 'none' }}>0:00</Text>
+		<Text root="h3" override={{ userSelect: 'none' }}>
+			{formatTime(time)}
+		</Text>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<Button
 			variant="outline"
@@ -71,9 +107,9 @@
 				aspectRatio: 1,
 				'&:hover': { color: hl }
 			}}
-			on:click={() => playing = !playing}
+			on:click={zaWarudo}
 		>
-			<Fa icon={playing ? faPlay : faPause} />
+			<Fa icon={playing ? faPause : faPlay} />
 		</Button>
 	</div>
 	<div class="game-buttons">
@@ -116,7 +152,7 @@
 				</Button>
 			{/each}
 		</div>
-		<Button {...buttonCommonProps} override={{ fontSize: '1.5rem' }}>NEW GAME</Button>
+		<Button {...buttonCommonProps} override={{ fontSize: '1.5rem' }} href="/single">NEW GAME</Button>
 	</div>
 </div>
 

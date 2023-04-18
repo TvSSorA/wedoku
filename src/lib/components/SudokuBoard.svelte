@@ -2,13 +2,29 @@
 	import { Text } from '@svelteuidev/core';
 	import { getContext } from 'svelte';
 	import { cellStyles } from '$lib/frontend/ColorScheme';
+	import { blockFromCoords } from '$lib/utils';
 	import type { Readable } from 'svelte/store';
 
 	export let board: number[][];
 	export let fullBoard: number[][];
 
 	let currentBoard: number[][];
-	$: currentBoard = board.map(row => [...row]); // Clone the board
+	let rowMap: number[][], colMap: number[][], blockMap: number[][];
+	$: {
+		currentBoard = board.map(row => [...row]); // Clone the board
+		rowMap = Array(9).fill(0).map(_ => Array(9).fill(0));
+		colMap = Array(9).fill(0).map(_ => Array(9).fill(0));
+		blockMap = Array(9).fill(0).map(_ => Array(9).fill(0));
+		for (let row = 0; row < 9; ++row)
+			for (let col = 0; col < 9; ++col)
+			{
+				let digit = board[row][col];
+				if (!digit--) continue;
+				rowMap[row][digit]++;
+				colMap[col][digit]++;
+				blockMap[blockFromCoords(row, col)][digit]++;
+			}
+	}
 
 	let selected: Record<'row' | 'col' | 'block', number | null> = {
 		row: null,
@@ -16,9 +32,7 @@
 		block: null
 	};
 
-	let moves: string[] = [
-
-	]
+	let moves: string[] = [];
 
 	export function insertDigit(digit: number)
 	{
@@ -26,47 +40,25 @@
 		if (row === null || col === null) return;
 		if (board[row][col] !== 0) return;
 		if (currentBoard[row][col] === digit) return;
-
-		if (currentBoard[row][col] === 0) {
-			moves.unshift(`add ${row} ${col}`)
-		}
-		else {
-			moves.unshift(`replace ${row} ${col} ${currentBoard[row][col]} ${digit}`)
-		}
+		moves.unshift(`${row} ${col} ${currentBoard[row][col]} ${digit}`)
 		currentBoard[row][col] = digit;
 	}
 
 	export function eraseDigit()
 	{
-		const { row, col } = selected;
-		if (row === null || col === null) return;
-		if (board[row][col] !== 0) return;
-		if (currentBoard[row][col] === 0) return;
-
-		moves.unshift(`remove ${row} ${col} ${currentBoard[row][col]}`)
-		currentBoard[row][col] = 0;
+		insertDigit(0);
 	}
 
 	export function undo() {
-		const moveToUndo = moves[0]
-		const sections: string[] = moveToUndo.split(' ')
-
-		if (sections[0] === 'add') {
-			currentBoard[parseInt(sections[1])][parseInt(sections[2])] = 0
-		}
-		else { // if it's remove or replace
-			currentBoard[parseInt(sections[1])][parseInt(sections[2])] = parseInt(sections[3])
-		}
-
-		moves.shift()
+		const moveToUndo = moves.shift();
+		if (!moveToUndo) return;
+		const sections = moveToUndo.split(' ');
+		currentBoard[parseInt(sections[0])][parseInt(sections[1])] = parseInt(sections[2])
 	}
 
 	export function selectCell(row: number, col: number)
 	{
-		selected = {
-			row, col,
-			block: Math.floor(row / 3) * 3 + Math.floor(col / 3)
-		};
+		selected = { row, col, block: blockFromCoords(row, col) };
 	}
 
 	export function hint() {
@@ -76,14 +68,13 @@
 		if (currentBoard[row][col] === fullBoard[row][col]) return;
 
 		currentBoard[row][col] = fullBoard[row][col];
-		board[row][col] = fullBoard[row][col];
-		moves = moves.filter(move => parseInt(move.split(' ')[1]) === row && parseInt(move.split(' ')[2]) === col)
+		moves = moves.filter(move => parseInt(move.split(' ')[1]) !== row && parseInt(move.split(' ')[2]) !== col)
 	}
 
 	const darkMode: Readable<boolean> = getContext('darkMode');
-	let hl1: string, hl2: string;
+	let hl1: string, hl2: string, digitColor: string;
 
-	$: ({ hl1, hl2 } = cellStyles($darkMode));
+	$: ({ hl1, hl2, digitColor } = cellStyles($darkMode));
 	$: getHighlightStyle = (row: number, col: number, block: number, type: 'bg' | 'digit') => {
 		const isSelectedCell = selected.row === row && selected.col === col;
 		const isSelectedSiblings =
@@ -92,6 +83,11 @@
 		if (type === 'bg') {
 			if (isSelectedCell) return `background-color: ${hl1};`;
 			if (isSelectedSiblings) return `background-color: ${hl2};`;
+		}
+		else {
+			if (board[row][col] !== 0) return "dark";
+			if (currentBoard[row][col] !== fullBoard[row][col]) return "red";
+			return digitColor;
 		}
 	};
 </script>
@@ -113,7 +109,7 @@
 					>
 						<Text
 							size={35}
-							color="dark"
+							color={getHighlightStyle(row, col, block, 'digit')}
 							override={{ userSelect: "none" }}
 						>
 							{currentBoard[row][col] || ""}
