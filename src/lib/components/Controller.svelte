@@ -20,7 +20,7 @@
 
 	export let board: SudokuBoard;
 	
-	let note = false;
+	let note: boolean = false;
 
 	const darkMode: Readable<boolean> = getContext('darkMode');
 	let fg: string, hl: string;
@@ -126,7 +126,7 @@
 							height: 'auto',
 							'&:hover': { color: (variant == "filled" ? "" : hl) }
 						}}
-						on:click={handler}
+						on:click={playing ? handler : () => {}}
 					>
 						<Fa {icon} fw size="1.5x" />
 					</Button>
@@ -146,7 +146,7 @@
 						'&:hover': { color: hl }
 					}}
 					fullSize
-					on:click={() => board.insertDigit(i + 1)}
+					on:click={playing ? note ? () => board.note(i + 1) : () => board.insertDigit(i + 1) : () => {}}
 				>
 					{i + 1}
 				</Button>

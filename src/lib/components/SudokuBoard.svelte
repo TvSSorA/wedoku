@@ -3,6 +3,7 @@
 	import { getContext } from 'svelte';
 	import { cellStyles } from '$lib/frontend/ColorScheme';
 	import { blockFromCoords } from '$lib/utils';
+	import NoteGrid from './NoteGrid.svelte';
 	import type { Readable } from 'svelte/store';
 
 	export let board: number[][];
@@ -33,6 +34,12 @@
 	};
 
 	let moves: string[] = [];
+	let notes: number[][][] = 
+		Array.from({
+            length: 9
+        }, () => Array.from({
+            length: 9
+        }, () => []));
 
 	export function insertDigit(digit: number)
 	{
@@ -68,7 +75,21 @@
 		if (currentBoard[row][col] === fullBoard[row][col]) return;
 
 		currentBoard[row][col] = fullBoard[row][col];
-		moves = moves.filter(move => parseInt(move.split(' ')[1]) !== row && parseInt(move.split(' ')[2]) !== col)
+		moves = moves.filter(move => parseInt(move.split(' ')[0]) !== row || parseInt(move.split(' ')[1]) !== col)
+	}
+
+	export function note(digit: number) {
+		const { row, col } = selected;
+		if (row === null || col === null) return;
+		if (board[row][col] !== 0) return;
+
+		if (notes[row][col].includes(digit)) {
+			const index = notes[row][col].indexOf(digit);
+			notes[row][col].splice(index, 1);
+		}
+		else {
+			notes[row][col].push(digit)
+		}
 	}
 
 	const darkMode: Readable<boolean> = getContext('darkMode');
@@ -112,7 +133,11 @@
 							color={getHighlightStyle(row, col, block, 'digit')}
 							override={{ userSelect: "none" }}
 						>
-							{currentBoard[row][col] || ""}
+							{#if currentBoard[row][col]}
+								{currentBoard[row][col]}
+							{:else}
+								<NoteGrid bind:notes {row} {col} />
+							{/if}
 						</Text>
 					</div>
 				{/each}
