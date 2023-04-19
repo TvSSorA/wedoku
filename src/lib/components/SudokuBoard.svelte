@@ -34,14 +34,9 @@
 	};
 
 	let moves: string[] = [];
-	let notes: number[][][] = 
-		Array.from({
-            length: 9
-        }, () => Array.from({
-            length: 9
-        }, () => []));
+	let notes: number[][] = Array(9).fill(0).map(_ => Array(9).fill(0));
 
-	export function insertDigit(digit: number)
+	export function insert(digit: number)
 	{
 		const { row, col } = selected;
 		if (row === null || col === null) return;
@@ -51,9 +46,9 @@
 		currentBoard[row][col] = digit;
 	}
 
-	export function eraseDigit()
+	export function erase()
 	{
-		insertDigit(0);
+		insert(0);
 	}
 
 	export function undo() {
@@ -63,7 +58,7 @@
 		currentBoard[parseInt(sections[0])][parseInt(sections[1])] = parseInt(sections[2])
 	}
 
-	export function selectCell(row: number, col: number)
+	export function select(row: number, col: number)
 	{
 		selected = { row, col, block: blockFromCoords(row, col) };
 	}
@@ -83,13 +78,7 @@
 		if (row === null || col === null) return;
 		if (board[row][col] !== 0) return;
 
-		if (notes[row][col].includes(digit)) {
-			const index = notes[row][col].indexOf(digit);
-			notes[row][col].splice(index, 1);
-		}
-		else {
-			notes[row][col].push(digit)
-		}
+		notes[row][col] ^= (1 << digit);
 	}
 
 	const darkMode: Readable<boolean> = getContext('darkMode');
@@ -126,7 +115,7 @@
 					<div
 						class="cell"
 						style={getHighlightStyle(row, col, block, 'bg')}
-						on:click={() => selectCell(row, col)}
+						on:click={() => select(row, col)}
 					>
 						<Text
 							size={35}
@@ -136,7 +125,7 @@
 							{#if currentBoard[row][col]}
 								{currentBoard[row][col]}
 							{:else}
-								<NoteGrid bind:notes {row} {col} />
+								<NoteGrid notes={notes[row][col]} />
 							{/if}
 						</Text>
 					</div>

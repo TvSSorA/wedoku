@@ -11,7 +11,8 @@
 	} from '@fortawesome/free-solid-svg-icons';
 	import { buttonStyles } from '$lib/frontend/ColorScheme';
 	import { accurateInterval } from '$lib/utils';
-	import { getContext, onMount, onDestroy } from 'svelte';
+	import { browser } from '$app/environment';
+	import { getContext, onDestroy } from 'svelte';
 
 	import type SudokuBoard from './SudokuBoard.svelte';
 	import type { Readable } from 'svelte/store';
@@ -19,18 +20,18 @@
 	import type { ButtonVariant } from '@svelteuidev/core';
 
 	export let board: SudokuBoard;
-	
-	let note: boolean = false;
 
 	const darkMode: Readable<boolean> = getContext('darkMode');
 	let fg: string, hl: string;
 	$: ({ fg, hl } = buttonStyles($darkMode));
 
-	const buttonCommonProps = {
-		color: '$grape500'
-	} as const;
-
-	let extraButtons: { icon: IconDefinition, label: string, variant: ButtonVariant, handler?: () => unknown }[];
+	let extraButtons: {
+		icon: IconDefinition;
+		label: string;
+		variant: ButtonVariant;
+		handler?: () => unknown;
+	}[];
+	let note: boolean = false;
 	$: extraButtons = [
 		{
 			icon: faArrowRotateLeft,
@@ -42,7 +43,7 @@
 			icon: faEraser,
 			label: 'Erase',
 			variant: 'outline',
-			handler: () => board.eraseDigit()
+			handler: () => board.erase()
 		},
 		{
 			icon: faLightbulb,
@@ -58,40 +59,48 @@
 		}
 	];
 
-	let playing: boolean = true;
-	let time: number = 0;
-	let cancelTimer: (() => void) | null;
-	
-	function formatTime(ms: number)
-	{
+	let playing = true;
+	let auto_paused = false;
+	let time = 0;
+	let cancelTimer: (() => void) | null = null;
+	$: {
+		if (browser) {
+			console.log(playing);
+			if (playing && !cancelTimer) {
+				cancelTimer = accurateInterval(() => (time += 100), 100);
+			} else if (!playing && cancelTimer) {
+				cancelTimer();
+				cancelTimer = null;
+			}
+		}
+	}
+	function formatTime(ms: number) {	
 		const s = Math.floor(ms / 1000);
 		const m = Math.floor(s / 60);
 		const h = Math.floor(m / 60);
-		return (h ? `${h       .toString().padStart(2, "0")}:` : "") +
-			   (    `${(m % 60).toString().padStart(2, "0")}:`     ) +
-			   (    `${(s % 60).toString().padStart(2, "0")}`      );
+		return (
+			(h ? `${h.toString().padStart(2, '0')}:` : '') +
+			`${(m % 60).toString().padStart(2, '0')}:` +
+			`${(s % 60).toString().padStart(2, '0')}`
+		);
 	}
-
-	function zaWarudo() {
-		if (playing) {
-			cancelTimer!();
-			cancelTimer = null;
-		}
-		else {
-			cancelTimer = accurateInterval(() => time += 100, 100);
-		}
-
-		playing = !playing;
-	}
-
-	onMount(() => {
-		cancelTimer = accurateInterval(() => time += 100, 100);
-	})
-	onDestroy(() => {
-		if (cancelTimer) cancelTimer();
-	})
-	
+	onDestroy(() => (playing = false));
 </script>
+
+<svelte:window
+	on:visibilitychange={() => {
+		if (document.visibilityState === 'hidden' && playing)
+		{
+			playing = false;
+			auto_paused = true;
+		}
+		else if (auto_paused)
+		{
+			playing = true;
+			auto_paused = false;
+		}
+	}}
+/>
 
 <div class="controller">
 	<div class="time-and-play-button">
@@ -107,7 +116,7 @@
 				aspectRatio: 1,
 				'&:hover': { color: hl }
 			}}
-			on:click={zaWarudo}
+			on:click={() => (playing = !playing)}
 		>
 			<Fa icon={playing ? faPause : faPlay} />
 		</Button>
@@ -124,9 +133,9 @@
 						override={{
 							aspectRatio: 1,
 							height: 'auto',
-							'&:hover': { color: (variant == "filled" ? "" : hl) }
+							'&:hover': { color: variant == 'filled' ? '' : hl }
 						}}
-						on:click={playing ? handler : () => {}}
+						on:click={() => {if (playing && handler) handler()}}
 					>
 						<Fa {icon} fw size="1.5x" />
 					</Button>
@@ -146,13 +155,16 @@
 						'&:hover': { color: hl }
 					}}
 					fullSize
-					on:click={playing ? note ? () => board.note(i + 1) : () => board.insertDigit(i + 1) : () => {}}
+					on:click={() => {
+						if (!playing) return;
+						return note ? board.note(i + 1) : board.insert(i + 1)
+					}}
 				>
 					{i + 1}
 				</Button>
 			{/each}
 		</div>
-		<Button {...buttonCommonProps} override={{ fontSize: '1.5rem' }} href="/single">NEW GAME</Button>
+		<Button color="$grape500" override={{ fontSize: '1.5rem' }} href="/single">NEW GAME</Button>
 	</div>
 </div>
 
