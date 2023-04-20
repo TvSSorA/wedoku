@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { Button, Switch } from '@svelteuidev/core';
+	import { Button, Switch, Tooltip, Menu } from '@svelteuidev/core';
 	import {
 		faPlay,
 		faBook,
@@ -22,26 +22,37 @@
 <section class="menu-container">
 	<img src="/favicon.png" alt="Logo" />
 	<div class="main-buttons">
-		<Button fullSize color="red" radius={0} variant="subtle">
-			<Fa slot="leftIcon" icon={faPlay} />
-			Play
-		</Button>
-		<Button fullSize color="dark" radius={0} variant="subtle">
-			<Fa slot="leftIcon" icon={faBook} />
-			Learn
-		</Button>
-		<Button fullSize color="dark" radius={0} variant="subtle">
-			<Fa slot="leftIcon" icon={faNewspaper} />
-			News
-		</Button>
-		<Button fullSize color="dark" radius={0} variant="subtle">
-			<Fa slot="leftIcon" icon={faShareNodes} />
-			Social
-		</Button>
-		<Button fullSize color="blue" radius={0} variant="subtle">
-			<Fa slot="leftIcon" icon={faGem} />
-			Premium
-		</Button>
+		<Menu trigger="click" position="right" placement="center">
+			<Button slot="control" fullSize color="red" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faPlay} />
+				Play
+			</Button>
+			<Menu.Item>Test 123</Menu.Item>
+		</Menu>
+		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
+			<Button fullSize color="dark" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faBook} />
+				Learn
+			</Button>
+		</Tooltip>
+		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
+			<Button fullSize color="dark" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faNewspaper} />
+				News
+			</Button>
+		</Tooltip>
+		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
+			<Button fullSize color="dark" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faShareNodes} />
+				Social
+			</Button>
+		</Tooltip>
+		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
+			<Button fullSize color="blue" radius={0} variant="subtle">
+				<Fa slot="leftIcon" icon={faGem} />
+				Premium
+			</Button>
+		</Tooltip>
 	</div>
 	<div class="footer-buttons">
 		<Switch checked size="md" radius="sm" color="red" onLabel="DARK" offLabel="LIGHT"/>

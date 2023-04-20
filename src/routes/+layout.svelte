@@ -52,5 +52,6 @@
 		top: 0;
 		width: 10vw;
 		height: 100vh;
+		overflow-x: visible;
 	}
 </style>

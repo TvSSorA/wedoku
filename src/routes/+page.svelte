@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
 	import { faUserGroup, faMessage, faLightbulb } from '@fortawesome/free-solid-svg-icons';
-	import { Card, Text, Title, Image, Anchor, Button } from '@svelteuidev/core';
+	import { Card, Text, Title, Image, Anchor, Button, Tooltip } from '@svelteuidev/core';
 
 	const navicons = [faUserGroup, faMessage];
 </script>
@@ -69,19 +69,21 @@
 				'&:hover': { textDecoration: 'none' }
 			}}
 		>
-			<Card
-				override={{
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					'&:hover': { backgroundColor: '$dark400' }
-				}}
-			>
-				<Image src="/board_screenshot.png" alt="Sudoku Board" />
-				<Card.Section>
-					<Text root="h3" weight={'bold'}>Play Multiplayer</Text>
-				</Card.Section>
-			</Card>
+			<Tooltip label="Coming soon!" color="grape" withArrow gutter={10} arrowSize={3}>
+				<Card
+					override={{
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						'&:hover': { backgroundColor: '$dark400' }
+					}}
+				>
+					<Image src="/board_screenshot.png" alt="Sudoku Board" />
+					<Card.Section>
+						<Text root="h3" weight={'bold'}>Play Multiplayer</Text>
+					</Card.Section>
+				</Card>
+			</Tooltip>
 		</Anchor>
 
 		<Anchor
@@ -91,19 +93,21 @@
 				'&:hover': { textDecoration: 'none' }
 			}}
 		>
-			<Card
-				override={{
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					'&:hover': { backgroundColor: '$dark400' }
-				}}
-			>
-				<Image src="/board_screenshot.png" alt="Sudoku Board" />
-				<Card.Section>
-					<Text root="h3" weight={'bold'}>Sudoku Lessons</Text>
-				</Card.Section>
-			</Card>
+			<Tooltip label="Coming soon!" color="grape" withArrow gutter={10} arrowSize={3}>
+				<Card
+					override={{
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						'&:hover': { backgroundColor: '$dark400' }
+					}}
+				>
+					<Image src="/board_screenshot.png" alt="Sudoku Board" />
+					<Card.Section>
+						<Text root="h3" weight={'bold'}>Sudoku Lessons</Text>
+					</Card.Section>
+				</Card>
+			</Tooltip>
 		</Anchor>
 	</div>
 
