@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { Button, Switch, Tooltip, Menu } from '@svelteuidev/core';
+	import { Button, Switch, Tooltip, Menu, Text } from '@svelteuidev/core';
 	import {
 		faPlay,
 		faBook,
@@ -22,12 +22,13 @@
 <section class="menu-container">
 	<img src="/favicon.png" alt="Logo" />
 	<div class="main-buttons">
-		<Menu trigger="click" position="right" placement="center">
+		<Menu trigger="hover" position="right" override={{ position: "static" }}> <!-- most big brain section ever ngl -->
 			<Button slot="control" fullSize color="red" radius={0} variant="subtle">
 				<Fa slot="leftIcon" icon={faPlay} />
 				Play
 			</Button>
-			<Menu.Item>Test 123</Menu.Item>
+			<Menu.Item root="a" href="/single"><Text size={14}>Single Player</Text></Menu.Item>
+			<Menu.Item><Text size={14}>Multiplayer</Text></Menu.Item>
 		</Menu>
 		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
 			<Button fullSize color="dark" radius={0} variant="subtle">
@@ -55,7 +56,7 @@
 		</Tooltip>
 	</div>
 	<div class="footer-buttons">
-		<Switch checked size="md" radius="sm" color="red" onLabel="DARK" offLabel="LIGHT"/>
+		<Switch checked size="md" radius="sm" color="red" onLabel="DARK" offLabel="LIGHT" />
 		<Button fullSize color="dark" radius={0} variant="subtle">
 			<Fa slot="leftIcon" icon={faGear} />
 			Settings

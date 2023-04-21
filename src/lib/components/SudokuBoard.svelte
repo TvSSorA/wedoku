@@ -63,6 +63,13 @@
 		selected = { row, col, block: blockFromCoords(row, col) };
 	}
 
+	export function moveSelect(rowDelta: number, colDelta: number)
+	{
+		const { row, col } = selected;
+		if (row === null || col === null) return;
+		select(row + rowDelta, col + colDelta);
+	}
+
 	export function hint() {
 		const { row, col } = selected;
 		if (row === null || col === null) return;

@@ -65,7 +65,6 @@
 	let cancelTimer: (() => void) | null = null;
 	$: {
 		if (browser) {
-			console.log(playing);
 			if (playing && !cancelTimer) {
 				cancelTimer = accurateInterval(() => (time += 100), 100);
 			} else if (!playing && cancelTimer) {
@@ -98,6 +97,45 @@
 		{
 			playing = true;
 			auto_paused = false;
+		}
+	}}
+
+	on:keydown={(e) => {
+		if (e.key === 'p') {
+			playing = !playing;
+		}
+		
+		if (!playing) return;
+
+		if (parseInt(e.key)) {
+			note ? board.note(parseInt(e.key)) : board.insert(parseInt(e.key))
+		}
+		else {
+			if (e.key === 'Backspace') {
+				board.undo();
+			}
+			if (e.key === 'd') {
+				board.erase();
+			}
+			if (e.key === 'h') {
+				board.hint()
+			}
+			if (e.key === 'n') {
+				note = !note;
+			}
+
+			if (e.key === 'ArrowLeft') {
+				board.moveSelect(0, -1);
+			}
+			if (e.key === 'ArrowRight') {
+				board.moveSelect(0, 1)
+			}
+			if (e.key === 'ArrowUp') {
+				board.moveSelect(-1, 0);
+			}
+			if (e.key === 'ArrowDown') {
+				board.moveSelect(1, 0);
+			}
 		}
 	}}
 />
