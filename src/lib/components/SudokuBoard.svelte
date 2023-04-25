@@ -67,7 +67,10 @@
 	{
 		const { row, col } = selected;
 		if (row === null || col === null) return;
-		select(row + rowDelta, col + colDelta);
+
+		const newRow = Math.max(0, Math.min(8, row + rowDelta));
+		const newCol = Math.max(0, Math.min(8, col + colDelta));
+		select(newRow, newCol)
 	}
 
 	export function hint() {
