@@ -16,6 +16,7 @@
     <Text>Difficulty</Text>
     {#each difficulties as difficulty}
         <Button
+            href="/single/{difficulty}"
             color={fg}
             variant={selected === difficulty ? "filled" : "subtle"}
             override={{

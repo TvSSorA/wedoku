@@ -6,7 +6,7 @@
 	export let data;
 
 	let boardComponent;
-	let difficulty: string = "easy";
+	let difficulty: string = data.difficulty;
 	$: console.log(difficulty);
 </script>
 
