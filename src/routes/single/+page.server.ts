@@ -1,15 +1,10 @@
 import type { PageServerLoad } from "./$types";
-import { Sudoku } from "$lib/server/board";
+import { getBoard } from "$lib/server/boardFirebase"
 
 export const load = (async () => {
-    let boardToSolve = new Sudoku(9, 40)
-    boardToSolve.fillValues()
+    const { difficulty, fullBoard, board } = await getBoard("normal");
 
-    const fullBoard = boardToSolve.toArray().map(row => [...row])
-
-    boardToSolve.removeDigits()
-
-    return { fullBoard, board: boardToSolve.toArray() }
+    return { difficulty, fullBoard, board }
 
 }) satisfies PageServerLoad
 
