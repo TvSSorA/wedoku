@@ -24,7 +24,6 @@
 </header>
 
 <main>
-	
 	<div class="welcome-text">
 		<Title align="center" size={80} variant='gradient' gradient={{from: 'pink', to: 'grape', deg: 45}}>Wedoku</Title>
 		<Title align="center" size={20}>Experience Sudoku like never before.</Title>
@@ -39,7 +38,6 @@
 		</div>
 	</div>
 	
-	
 	<div class="quick-start-buttons">
 		<Anchor
 			href="/single"
@@ -50,7 +48,6 @@
 			}}
 		>
 			<Card
-			
 				override={{
 					display: 'flex',
 					flexDirection: 'column',
@@ -58,60 +55,44 @@
 					'&:hover': { backgroundColor: '$dark400' }
 				}}
 			>
-				<Fa icon={faPencil} size="10x" />
+			<Fa icon={faPencil} size="10x" />
 				<Card.Section>
 					<Text root="h3" weight={'bold'}>Play Single-Player</Text>
 				</Card.Section>
 			</Card>
 		</Anchor>
 
-		<Anchor
-			override={{
-				textDecoration: 'none',
-				width: '25%',
-				'&:hover': { textDecoration: 'none' }
-			}}
-		>
-			<Tooltip label="Coming soon!" color="grape" withArrow gutter={10} arrowSize={3}>
-				<Card
-					override={{
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						'&:hover': { backgroundColor: '$dark400' }
-					}}
-				>
-					<Fa icon={faKhanda} size="10x" />
-					<Card.Section>
-						<Text root="h3" weight={'bold'}>Play Multiplayer</Text>
-					</Card.Section>
-				</Card>
-			</Tooltip>
-		</Anchor>
-
-		<Anchor
-			override={{
-				textDecoration: 'none',
-				width: '25%',
-				'&:hover': { textDecoration: 'none' }
-			}}
-		>
-			<Tooltip label="Coming soon!" color="grape" withArrow gutter={10} arrowSize={3}>
-				<Card
-					override={{
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						'&:hover': { backgroundColor: '$dark400' }
-					}}
-				>
-					<Fa icon={faBookTanakh} size="10x" />
-					<Card.Section>
-						<Text root="h3" weight={'bold'}>Sudoku Lessons</Text>
-					</Card.Section>
-				</Card>
-			</Tooltip>
-		</Anchor>
+		<Tooltip label="Coming soon!" color="grape" withArrow gutter={10} arrowSize={3} override={{ width: '25%' }}>
+			<Card
+				override={{
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+					'&:hover': { backgroundColor: '$dark400' }
+				}}
+			>
+			<Fa icon={faKhanda} size="10x" />
+				<Card.Section>
+					<Text root="h3" weight={'bold'}>Play Multiplayer</Text>
+				</Card.Section>
+			</Card>
+		</Tooltip>
+	
+		<Tooltip label="Coming soon!" color="grape" withArrow gutter={10} arrowSize={3} override={{ width: '25%' }}>
+			<Card
+				override={{
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+					'&:hover': { backgroundColor: '$dark400' }
+				}}
+			>
+			<Fa icon={faBookTanakh} size="10x" />
+				<Card.Section>
+					<Text root="h3" weight={'bold'}>Sudoku Lessons</Text>
+				</Card.Section>
+			</Card>
+		</Tooltip>
 	</div>
 		
 	<div class="tip-recommended-wrapper">
