@@ -1,8 +1,7 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { faUserGroup, faMessage, faLightbulb } from '@fortawesome/free-solid-svg-icons';
-	import { Card, Text, Title, Image, Anchor, Button, Tooltip } from '@svelteuidev/core';
-
+	import { faUserGroup, faMessage, faLightbulb, faPencil, faKhanda, faBookTanakh } from '@fortawesome/free-solid-svg-icons';
+	import { Card, Text, Title, Anchor, Button, Tooltip } from '@svelteuidev/core';
 	const navicons = [faUserGroup, faMessage];
 </script>
 
@@ -25,19 +24,22 @@
 </header>
 
 <main>
+	
 	<div class="welcome-text">
-		<Title align="center" size={80}>Wedoku</Title>
-		<Title align="center" size={30}>Experience Sudoku like never before.</Title>
+		<Title align="center" size={80} variant='gradient' gradient={{from: 'pink', to: 'grape', deg: 45}}>Wedoku</Title>
+		<Title align="center" size={20}>Experience Sudoku like never before.</Title>
 		<div class="welcome-signup">
-			<Button ripple variant="gradient" size={40} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
-				REGISTER
-			</Button>
-			<Text size={40}>/</Text>
-			<Button ripple variant="gradient" size={40} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
+			<Button ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
 				LOGIN
+			</Button>
+			
+			<Button ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
+				SIGNUP
 			</Button>
 		</div>
 	</div>
+	
+	
 	<div class="quick-start-buttons">
 		<Anchor
 			href="/single"
@@ -48,6 +50,7 @@
 			}}
 		>
 			<Card
+			
 				override={{
 					display: 'flex',
 					flexDirection: 'column',
@@ -55,7 +58,7 @@
 					'&:hover': { backgroundColor: '$dark400' }
 				}}
 			>
-				<Image src="/board_screenshot.png" alt="Sudoku Board" />
+				<Fa icon={faPencil} size="10x" />
 				<Card.Section>
 					<Text root="h3" weight={'bold'}>Play Single-Player</Text>
 				</Card.Section>
@@ -78,7 +81,7 @@
 						'&:hover': { backgroundColor: '$dark400' }
 					}}
 				>
-					<Image src="/board_screenshot.png" alt="Sudoku Board" />
+					<Fa icon={faKhanda} size="10x" />
 					<Card.Section>
 						<Text root="h3" weight={'bold'}>Play Multiplayer</Text>
 					</Card.Section>
@@ -102,7 +105,7 @@
 						'&:hover': { backgroundColor: '$dark400' }
 					}}
 				>
-					<Image src="/board_screenshot.png" alt="Sudoku Board" />
+					<Fa icon={faBookTanakh} size="10x" />
 					<Card.Section>
 						<Text root="h3" weight={'bold'}>Sudoku Lessons</Text>
 					</Card.Section>
@@ -110,7 +113,7 @@
 			</Tooltip>
 		</Anchor>
 	</div>
-
+		
 	<div class="tip-recommended-wrapper">
 		<div class="recommended-match-wrapper">
 			<Title order={2}>Recommended Match</Title>
@@ -134,7 +137,7 @@
 				</Button>
 			</div>
 		</div>
-
+	
 		<div class="daily-tip">
 			<div class="header">
 				<Fa icon={faLightbulb} size="1.5x" />
@@ -144,6 +147,7 @@
 			<Text align="center">loremipsum</Text>
 		</div>
 	</div>
+
 </main>
 
 <footer />

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { Button, Switch, Tooltip, Menu, Text } from '@svelteuidev/core';
+	import { Button, Container, Switch, Tooltip, Menu, Text } from '@svelteuidev/core';
 	import {
 		faPlay,
 		faBook,
@@ -61,7 +61,7 @@
 			<Fa slot="leftIcon" icon={faGear} />
 			Settings
 		</Button>
-		<Button fullSize color="dark" radius={0} variant="subtle">
+		<Button fullSize color="dark" radius={0} variant="subtle" >
 			<Fa slot="leftIcon" icon={faCircleQuestion} />
 			Help
 		</Button>
@@ -88,7 +88,8 @@
 			align-items: center;
 		}
 		.footer-buttons {
-			opacity: 0.5;
+			opacity: 0.7;
+			margin-bottom: 1rem;
 		}
 	}
 </style>

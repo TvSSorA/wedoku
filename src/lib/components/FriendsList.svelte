@@ -33,7 +33,7 @@
 	<Button
 		fullSize
 		radius={0}
-		color="gray"
+		color="$dark-background-color"
 		override={{ fontSize: '1rem' }}
 		on:click={() => (opened = !opened)}
 	>
