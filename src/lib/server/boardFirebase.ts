@@ -4,7 +4,7 @@ import { shuffleColumn, shuffleRow } from "$lib/transpose";
 
 export async function getBoard(diff: string) {
     // Auth and query raw string board
-    const db = authenticate();
+    const { db } = authenticate();
 
     const colRef = collection(db, "boards");
     const q = query(colRef, where("difficulty", "==", diff));

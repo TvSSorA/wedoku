@@ -7,7 +7,9 @@
 
 <header>
 	<div class="avatar-wrapper">
-		<img src="/favicon.png" alt="Avatar" id="avatar" />
+		<a href="/" id="avatar">
+			<img src="/favicon.png" alt="Avatar" />
+		</a>
 		<h5>loremipsum</h5>
 		<img
 			src="https://cdn.jsdelivr.net/npm/flag-icons/flags/4x3/vn.svg"
@@ -28,7 +30,7 @@
 		<Title align="center" size={80} variant='gradient' gradient={{from: 'pink', to: 'grape', deg: 45}}>Wedoku</Title>
 		<Title align="center" size={20}>Experience Sudoku like never before.</Title>
 		<div class="welcome-signup">
-			<Button ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
+			<Button ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }} >
 				LOGIN
 			</Button>
 			
@@ -150,8 +152,12 @@
 			height: 2rem;
 
 			#avatar {
-				aspect-ratio: 1;
 				height: 100%;
+
+				img {
+					aspect-ratio: 1;
+					height: 100%;
+				}
 			}
 
 			#flag {
