@@ -7,7 +7,6 @@
 
 	let boardComponent;
 	let difficulty: string = data.difficulty;
-	$: console.log(difficulty);
 </script>
 
 <div class="game">

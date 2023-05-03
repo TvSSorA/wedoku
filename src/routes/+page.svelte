@@ -1,8 +1,19 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
 	import { faUserGroup, faMessage, faLightbulb, faPencil, faKhanda, faBookTanakh } from '@fortawesome/free-solid-svg-icons';
+	import { slide } from 'svelte/transition';
 	import { Card, Text, Title, Anchor, Button, Tooltip } from '@svelteuidev/core';
+	import { signInGoogle } from '$lib/firebase/user';
+	
 	const navicons = [faUserGroup, faMessage];
+
+	let opened = false;
+
+	export let list = [
+		{
+			content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec nisi"
+		}
+	]
 </script>
 
 <header>
@@ -30,12 +41,8 @@
 		<Title align="center" size={80} variant='gradient' gradient={{from: 'pink', to: 'grape', deg: 45}}>Wedoku</Title>
 		<Title align="center" size={20}>Experience Sudoku like never before.</Title>
 		<div class="welcome-signup">
-			<Button ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }} >
+			<Button on:click={signInGoogle} ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }} >
 				LOGIN
-			</Button>
-			
-			<Button ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
-				SIGNUP
 			</Button>
 		</div>
 	</div>
@@ -119,6 +126,27 @@
 					Challenge
 				</Button>
 			</div>
+
+			<div class="recommended-match">
+				<div class="avatar-name">
+					<img src="/favicon.png" alt="Avatar" id="avatar" />
+					<h5>loremipsum</h5>
+					<img
+						src="https://cdn.jsdelivr.net/npm/flag-icons/flags/4x3/vn.svg"
+						alt="Country Flag"
+						id="flag"
+					/>
+				</div>
+				<div class="h2h-record">
+					<p class="score win">0</p>
+					<p class="score dash">/</p>
+					<p class="score loss">0</p>
+				</div>
+				<Button variant="gradient" gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
+					Challenge
+				</Button>
+			</div>
+			
 		</div>
 	
 		<div class="daily-tip">
@@ -128,6 +156,29 @@
 			</div>
 
 			<Text align="center">loremipsum</Text>
+		</div>
+
+		<div class="daily-tips-container">
+			<Button
+				fullSize
+				radius={0}
+				color="$dark-background-color"
+				override={{ fontSize: '1rem' }}
+				on:click={() => (opened = !opened)}
+			>
+			<Fa icon={faLightbulb} size="1.5x" />
+			</Button>
+			{#if opened}
+				<div class="friends-list" transition:slide>
+					{#each list as { content }}
+						<div class="friend">
+							<Text override={{ fontSize: '$xs', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+								{content}
+							</Text>
+						</div>
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</div>
 
@@ -253,6 +304,7 @@
 			}
 
 			.daily-tip {
+
 				display: flex;
 				flex-direction: column;
 				justify-content: center;

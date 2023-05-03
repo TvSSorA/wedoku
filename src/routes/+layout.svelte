@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 	import '../app.scss';
 	import FriendsList from '$lib/components/FriendsList.svelte';
 	import GameMenu from '$lib/components/GameMenu.svelte';
-	import { SvelteUIProvider, theme } from '@svelteuidev/core';
+	import { SvelteUIProvider } from '@svelteuidev/core';
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 

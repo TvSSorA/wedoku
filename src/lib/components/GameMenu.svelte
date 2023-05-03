@@ -20,7 +20,7 @@
 </script>
 
 <section class="menu-container">
-	<img src="/favicon.png" alt="Logo" />
+	<a class="logo" href="/"><img src="/favicon.png" alt="Logo" /></a>
 	<div class="main-buttons">
 		<Menu trigger="hover" position="right" override={{ position: "static" }}> <!-- most big brain section ever ngl -->
 			<Button slot="control" fullSize color="red" radius={0} variant="subtle">
@@ -56,8 +56,8 @@
 		</Tooltip>
 	</div>
 	<div class="footer-buttons">
-		<Switch checked size="md" radius="sm" color="red" onLabel="DARK" offLabel="LIGHT" />
-		<Button fullSize color="dark" radius={0} variant="subtle">
+		<Switch color="yellow" />
+		<Button href="/settings" fullSize color="dark" radius={0} variant="subtle">
 			<Fa slot="leftIcon" icon={faGear} />
 			Settings
 		</Button>
@@ -70,6 +70,7 @@
 
 <style lang="scss">
 	img {
+		margin-left: 13px;
 		width: 80%;
 	}
 
