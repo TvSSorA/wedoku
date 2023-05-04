@@ -1,22 +1,26 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { faUserGroup, faMessage, faLightbulb } from '@fortawesome/free-solid-svg-icons';
-	import { Card, Text, Title, Image, Anchor, Button, Modal, Group } from '@svelteuidev/core';
-
-	let opened = false;
-	let signupUsername = '';
-	let signupEmail = '';
-	let signupPassword = '';
-
+	import { faUserGroup, faMessage, faLightbulb, faPencil, faKhanda, faBookTanakh } from '@fortawesome/free-solid-svg-icons';
+	import { slide } from 'svelte/transition';
+	import { Card, Text, Title, Anchor, Button, Tooltip } from '@svelteuidev/core';
+	import { signInGoogle } from '$lib/firebase/user';
+	
 	const navicons = [faUserGroup, faMessage];
 
+	let opened = false;
 
-	
+	export let list = [
+		{
+			content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec nisi"
+		}
+	]
 </script>
 
 <header>
 	<div class="avatar-wrapper">
-		<img src="/favicon.png" alt="Avatar" id="avatar" />
+		<a href="/" id="avatar">
+			<img src="/favicon.png" alt="Avatar" />
+		</a>
 		<h5>loremipsum</h5>
 		<img
 			src="https://cdn.jsdelivr.net/npm/flag-icons/flags/4x3/vn.svg"
@@ -37,37 +41,9 @@
 		<Title align="center" size={80} variant='gradient' gradient={{from: 'pink', to: 'grape', deg: 45}}>Wedoku</Title>
 		<Title align="center" size={20}>Experience Sudoku like never before.</Title>
 		<div class="welcome-signup">
-			<div id = "modal-signup" class = "modal">
-				<Group position="center">
-					<Button on:click={() => (opened = true)} ripple variant="gradient" size={40} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
-						REGISTER
-					</Button>
-					<Text size={40}>/</Text>
-					<Button ripple variant="gradient" size={40} gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
-						LOGIN
-					</Button>
-				</Group>
-
-				<Modal {opened} title="Sign-up Information">
-					<form id="signup-form">
-						<div class="input-field">
-							<label for="signup-password">Enter Username</label>
-							<input type="username" id="username" required bind:value={signupUsername}/>
-						</div>
-						<div class="input-field">
-							<label for="signup-email">Email address</label>
-							<input type="email" id="email" required bind:value={signupEmail}/>
-						</div>
-						<div class="input-field">
-							<label for="signup-password">Enter Password</label>
-							<input type="password" id="password" required bind:value={signupPassword}/>
-						</div>
-						<button>Sign up</button>
-					</form>
-					<Button on:click={() => opened = !opened}>
-						Cancel
-					</Button>
-				</Modal>
+			<Button on:click={signInGoogle} ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }} >
+				LOGIN
+			</Button>
 		</div>
 	</div>
 	
@@ -150,6 +126,27 @@
 					Challenge
 				</Button>
 			</div>
+
+			<div class="recommended-match">
+				<div class="avatar-name">
+					<img src="/favicon.png" alt="Avatar" id="avatar" />
+					<h5>loremipsum</h5>
+					<img
+						src="https://cdn.jsdelivr.net/npm/flag-icons/flags/4x3/vn.svg"
+						alt="Country Flag"
+						id="flag"
+					/>
+				</div>
+				<div class="h2h-record">
+					<p class="score win">0</p>
+					<p class="score dash">/</p>
+					<p class="score loss">0</p>
+				</div>
+				<Button variant="gradient" gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
+					Challenge
+				</Button>
+			</div>
+			
 		</div>
 	
 		<div class="daily-tip">
@@ -159,6 +156,29 @@
 			</div>
 
 			<Text align="center">loremipsum</Text>
+		</div>
+
+		<div class="daily-tips-container">
+			<Button
+				fullSize
+				radius={0}
+				color="$dark-background-color"
+				override={{ fontSize: '1rem' }}
+				on:click={() => (opened = !opened)}
+			>
+			<Fa icon={faLightbulb} size="1.5x" />
+			</Button>
+			{#if opened}
+				<div class="friends-list" transition:slide>
+					{#each list as { content }}
+						<div class="friend">
+							<Text override={{ fontSize: '$xs', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+								{content}
+							</Text>
+						</div>
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</div>
 
@@ -183,8 +203,12 @@
 			height: 2rem;
 
 			#avatar {
-				aspect-ratio: 1;
 				height: 100%;
+
+				img {
+					aspect-ratio: 1;
+					height: 100%;
+				}
 			}
 
 			#flag {
@@ -280,6 +304,7 @@
 			}
 
 			.daily-tip {
+
 				display: flex;
 				flex-direction: column;
 				justify-content: center;

@@ -1,10 +1,11 @@
-import { getDocs, query, collection, where } from "firebase/firestore";
-import { authenticate } from "./auth";
+// Hmm...better use Firebase Admin SDK for this
+
+import { app } from "$lib/firebase/app";
+import { getFirestore, getDocs, query, collection, where } from "firebase/firestore";
 import { shuffleColumn, shuffleRow } from "$lib/transpose";
 
 export async function getBoard(diff: string) {
-    // Auth and query raw string board
-    const db = authenticate();
+    const db = getFirestore(app);
 
     const colRef = collection(db, "boards");
     const q = query(colRef, where("difficulty", "==", diff));

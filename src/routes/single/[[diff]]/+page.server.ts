@@ -1,5 +1,5 @@
 import type { PageServerLoad } from "./$types";
-import { getBoard } from "$lib/server/boardFirebase"
+import { getBoard } from "$lib/firebase/boardFirebase";
 
 export const load = (async ({ params: { diff } }) => {
     if (diff) {
