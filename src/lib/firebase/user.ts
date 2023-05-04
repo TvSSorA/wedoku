@@ -1,6 +1,7 @@
 import type { FirebaseError } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { collection, getFirestore, doc, setDoc } from "firebase/firestore";
+import { getDatabase, ref, set } from "firebase/database";
 import { app } from "./app";
 
 const auth = getAuth(app);
@@ -30,6 +31,7 @@ export function signInGoogle() {
                     notifications: true,
                   };
                   setDoc(doc(db, "users", user.uid), userRef, {merge: true});
+                  signIntoRealTime(user.uid, profile.displayName, "", "", "");
                 });
             }
 
@@ -46,4 +48,17 @@ export function signInGoogle() {
             // ...
         });
     
+}
+
+export function signIntoRealTime(userId: string, userName: any, startPuzzle: string, nowPuzzle: string, answerPuzzle: string) {
+    const db = getFirestore(app);
+    const rtdb = getDatabase(app);
+    const referenceRT = ref(rtdb, 'users/' + userId);
+
+    set(referenceRT, {
+      username: userName,
+      puzzleIntial: startPuzzle,
+      puzzleCurrent: nowPuzzle,
+      solution: answerPuzzle,
+    });
 }
