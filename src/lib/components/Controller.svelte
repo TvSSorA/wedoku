@@ -203,7 +203,13 @@
 				</Button>
 			{/each}
 		</div>
-		<Button color="$grape500" override={{ fontSize: '1.5rem' }} href="/single/{$page.params.diff || "easy"}">NEW GAME</Button>
+		<Button 
+			color="$grape500" 
+			override={{ fontSize: '1.5rem' }} 
+			href="/single/{$page.params.diff || "easy"}"
+			>
+			NEW GAME
+		</Button>
 	</div>
 </div>
 

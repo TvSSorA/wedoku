@@ -1,14 +1,16 @@
 import type { FirebaseError } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { collection, getFirestore, doc, setDoc } from "firebase/firestore";
-import { app } from "./app";
+import { GoogleAuthProvider, signInWithPopup, type User } from "firebase/auth";
+import { doc, setDoc, type DocumentData } from "firebase/firestore";
+import { auth, db } from "./app";
+import { writable } from "svelte/store";
+import type { UserDoc } from "$lib/types";
 
-const auth = getAuth(app);
-
+const userCred = writable<User | null>(null); // Data from Auth
+const userData = writable<DocumentData | null>(null); // Custom data from docs
+export { userCred, userData }
 
 export function signInGoogle() {
     const provider = new GoogleAuthProvider();
-    const db = getFirestore(app);
 
     signInWithPopup(auth, provider)
         .then((result) => {
@@ -19,18 +21,27 @@ export function signInGoogle() {
             const user = result.user;
             // IdP data available using getAdditionalUserInfo(result)
             if (user !== null) {
-                user.providerData.forEach((profile) => {
-                  const userRef = {
-                    userName: profile.displayName,
-                    email: profile.email,
-                    photo: profile.photoURL,
-                    dark: true,   //This is light/dark mode
-                    music: true,
-                    sound: true,
-                    notifications: true,
-                  };
-                  setDoc(doc(db, "users", user.uid), userRef, {merge: true});
-                });
+                const userObj: UserDoc = {
+                    onlineStatus: "online",
+                    settings: {
+                        dark: true,   //This is light/dark mode
+                        music: true,
+                        sound: true,
+                        showOnlineStatus: true,
+                        notifications: true
+                    },
+                    soloGameHistory: [
+
+                    ],
+                    pvpGameHistory: [
+
+                    ],
+                    friends: [
+
+                    ],
+                    savedGame: null
+                };
+                setDoc(doc(db, "users", user.uid), userObj, {  merge: true });
             }
 
             // Get Provider User into Firestore
@@ -45,5 +56,4 @@ export function signInGoogle() {
             const credential = GoogleAuthProvider.credentialFromError(error);
             // ...
         });
-    
 }

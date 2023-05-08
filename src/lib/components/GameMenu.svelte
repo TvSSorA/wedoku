@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { Button, Container, Switch, Tooltip, Menu, Text } from '@svelteuidev/core';
+	import { Button, Switch, Tooltip, Menu, Text } from '@svelteuidev/core';
 	import {
 		faPlay,
 		faBook,
@@ -12,6 +12,8 @@
 	} from '@fortawesome/free-solid-svg-icons';
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
+
+	import { userCred, userData } from '$lib/firebase/user';
 
 	const darkMode: Writable<boolean> = getContext('darkMode');
 	// Do this because the checkbox state is flipped
@@ -57,10 +59,12 @@
 	</div>
 	<div class="footer-buttons">
 		<Switch color="yellow" />
+		{#if !($userCred && !$userData)}
 		<Button href="/settings" fullSize color="dark" radius={0} variant="subtle">
 			<Fa slot="leftIcon" icon={faGear} />
 			Settings
 		</Button>
+		{/if}
 		<Button fullSize color="dark" radius={0} variant="subtle" >
 			<Fa slot="leftIcon" icon={faCircleQuestion} />
 			Help

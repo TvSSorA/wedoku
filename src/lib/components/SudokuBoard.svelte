@@ -1,48 +1,79 @@
 <script lang="ts">
+	import NoteGrid from './NoteGrid.svelte';
 	import { Text } from '@svelteuidev/core';
-	import { getContext } from 'svelte';
+	import { getContext, createEventDispatcher } from 'svelte';
 	import { cellStyles } from '$lib/frontend/ColorScheme';
 	import { blockFromCoords } from '$lib/utils';
-	import NoteGrid from './NoteGrid.svelte';
 	import type { Readable } from 'svelte/store';
 
 	export let board: number[][];
 	export let fullBoard: number[][];
 
+	const dispatch = createEventDispatcher();
+
 	let currentBoard: number[][];
 	let rowMap: number[][], colMap: number[][], blockMap: number[][];
+	let remainingCells = 0, errors = 0;
+	
+	$: if (!remainingCells && !errors) dispatch("solved");
 	$: {
 		currentBoard = board.map(row => [...row]); // Clone the board
-		rowMap = Array(9).fill(0).map(_ => Array(9).fill(0));
-		colMap = Array(9).fill(0).map(_ => Array(9).fill(0));
-		blockMap = Array(9).fill(0).map(_ => Array(9).fill(0));
+		rowMap = Array(9).fill(0).map(_ => Array(10).fill(0));
+		colMap = Array(9).fill(0).map(_ => Array(10).fill(0));
+		blockMap = Array(9).fill(0).map(_ => Array(10).fill(0));
 		for (let row = 0; row < 9; ++row)
 			for (let col = 0; col < 9; ++col)
 			{
-				let digit = board[row][col];
-				if (!digit--) continue;
+				let digit = currentBoard[row][col];
+				remainingCells += +(digit == 0);
 				rowMap[row][digit]++;
 				colMap[col][digit]++;
 				blockMap[blockFromCoords(row, col)][digit]++;
 			}
 	}
 
-	let selected: Record<'row' | 'col' | 'block', number | null> = {
-		row: null,
-		col: null,
-		block: null
-	};
-
+	let selected: Record<'row' | 'col' | 'block', number> | null = null;
 	let moves: string[] = [];
 	let notes: number[][] = Array(9).fill(0).map(_ => Array(9).fill(0));
 
+	function updateInternalStates(row: number, col: number, block: number,
+		oldDigit: number, newDigit: number)
+	{
+		if (oldDigit == 0 && newDigit != 0) // zero to non-zero
+			remainingCells--;
+		else if (oldDigit != 0 && newDigit == 0) // non-zero to zero
+			remainingCells++;
+
+		// Hack for converting bool to int, https://stackoverflow.com/a/66000126/9806609
+		errors -= (
+			+!!(--rowMap[row][oldDigit] == 1)      +
+			+!!(--colMap[col][oldDigit] == 1)      +
+			+!!(--blockMap[block][oldDigit] == 1)
+		) * +!!(oldDigit != 0);
+
+		errors += (
+			+!!(++rowMap[row][newDigit] == 2)      +
+			+!!(++colMap[col][newDigit] == 2)      +
+			+!!(++blockMap[block][newDigit] == 2)
+		) * +!!(newDigit != 0);
+	}
+
 	export function insert(digit: number)
 	{
-		const { row, col } = selected;
-		if (row === null || col === null) return;
+		if (!selected) return;
+		const { row, col, block } = selected;
 		if (board[row][col] !== 0) return;
-		if (currentBoard[row][col] === digit) return;
-		moves.unshift(`${row} ${col} ${currentBoard[row][col]} ${digit}`)
+
+		const oldDigit = currentBoard[row][col];
+		if (oldDigit === digit) return;
+		moves.unshift(`${row} ${col} ${oldDigit} ${digit}`);
+
+		if (oldDigit == 0 && digit != 0) // zero to non-zero
+			remainingCells--;
+		else if (oldDigit != 0 && digit == 0) // non-zero to zero
+			remainingCells++;
+		
+		updateInternalStates(row, col, block, oldDigit, digit);
 		currentBoard[row][col] = digit;
 	}
 
@@ -55,7 +86,14 @@
 		const moveToUndo = moves.shift();
 		if (!moveToUndo) return;
 		const sections = moveToUndo.split(' ');
-		currentBoard[parseInt(sections[0])][parseInt(sections[1])] = parseInt(sections[2])
+
+		const row = parseInt(sections[0]);
+		const col = parseInt(sections[1]);
+		const oldDigit = currentBoard[row][col];
+		const digit = parseInt(sections[2]);
+		
+		updateInternalStates(row, col, blockFromCoords(row, col), oldDigit, digit);
+		currentBoard[row][col] = digit;
 	}
 
 	export function select(row: number, col: number)
@@ -65,8 +103,8 @@
 
 	export function moveSelect(rowDelta: number, colDelta: number)
 	{
+		if (!selected) return;
 		const { row, col } = selected;
-		if (row === null || col === null) return;
 
 		const newRow = Math.max(0, Math.min(8, row + rowDelta));
 		const newCol = Math.max(0, Math.min(8, col + colDelta));
@@ -74,18 +112,19 @@
 	}
 
 	export function hint() {
-		const { row, col } = selected;
-		if (row === null || col === null) return;
+		if (!selected) return;
+		const { row, col, block } = selected;
 		if (board[row][col] !== 0) return;
 		if (currentBoard[row][col] === fullBoard[row][col]) return;
 
+		updateInternalStates(row, col, block, currentBoard[row][col], fullBoard[row][col]);
 		currentBoard[row][col] = fullBoard[row][col];
 		moves = moves.filter(move => parseInt(move.split(' ')[0]) !== row || parseInt(move.split(' ')[1]) !== col)
 	}
 
 	export function note(digit: number) {
+		if (!selected) return;
 		const { row, col } = selected;
-		if (row === null || col === null) return;
 		if (board[row][col] !== 0) return;
 
 		notes[row][col] ^= (1 << digit);
@@ -96,9 +135,9 @@
 
 	$: ({ hl1, hl2, digitColor } = cellStyles($darkMode));
 	$: getHighlightStyle = (row: number, col: number, block: number, type: 'bg' | 'digit') => {
-		const isSelectedCell = selected.row === row && selected.col === col;
-		const isSelectedSiblings =
-			selected.row === row || selected.col === col || selected.block === block;
+		const isSelectedCell = selected && selected.row === row && selected.col === col;
+		const isSelectedSiblings = selected &&
+			(selected.row === row || selected.col === col || selected.block === block);
 
 		if (type === 'bg') {
 			if (isSelectedCell) return `background-color: ${hl1};`;

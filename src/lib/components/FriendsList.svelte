@@ -1,32 +1,28 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
+	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { faCircle } from '@fortawesome/free-solid-svg-icons';
 	import { Button, Burger, Text } from '@svelteuidev/core';
-	export let list = [
-		{
-			name: 'loremipsum',
-			avatar: '/favicon.png',
-			status: 'online'
-		},
-		{
-			name: 'foo',
-			avatar: '/favicon.png',
-			status: 'idle'
-		},
-		{
-			name: 'bruh',
-			avatar: '/favicon.png',
-			status: 'offline'
-		}
-	];
+	import { userCred } from '$lib/firebase/user';
+	import { doc, onSnapshot } from 'firebase/firestore';
+	import { db } from '$lib/firebase/app';
+
+	let friendsList: string[];
+
 	let opened = false;
 
 	const statusColor: Record<string, string> = {
 		online: 'lime',
-		idle: 'red',
+		"in-game" : 'red',
 		offline: 'gray'
 	};
+
+	onMount(async () => {
+		onSnapshot(doc(db, "users", $userCred!.uid), (doc) => {
+			friendsList = (doc.data())!.friends
+		})
+	});
 </script>
 
 <div class="friends-list-container">
@@ -42,17 +38,17 @@
 	</Button>
 	{#if opened}
 		<div class="friends-list" transition:slide>
-			{#each list as { name, avatar, status }}
+			{#each friendsList as friend}
 				<div class="friend">
-					<img src={avatar} alt="{name}'s avatar" />
+					<img src="/favicon.png" alt="whar's avatar" />
 					<Text override={{ fontSize: '$xs', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-						{name}
+						{friend}
 					</Text>
 					<Fa
 						class="status"
 						size="0.5x"
 						icon={faCircle}
-						color={statusColor[status]}
+						color='lime'
 						style="margin-left: auto"
 					/>
 				</div>

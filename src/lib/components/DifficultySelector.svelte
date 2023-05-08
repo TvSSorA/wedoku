@@ -22,7 +22,9 @@
             override={{
                 textTransform: "capitalize",
             }}
-            on:click={() => selected = difficulty}
+            on:click={() => {
+                selected = difficulty
+			}}
         >
             {difficulty}
         </Button>

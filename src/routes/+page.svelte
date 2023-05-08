@@ -1,50 +1,41 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { faUserGroup, faMessage, faLightbulb, faPencil, faKhanda, faBookTanakh } from '@fortawesome/free-solid-svg-icons';
+	import { faMessage, faLightbulb, faPencil, faKhanda, faBookTanakh } from '@fortawesome/free-solid-svg-icons';
 	import { slide } from 'svelte/transition';
 	import { Card, Text, Title, Anchor, Button, Tooltip } from '@svelteuidev/core';
 	import { signInGoogle } from '$lib/firebase/user';
-	
-	const navicons = [faUserGroup, faMessage];
-
-	let opened = false;
-
-	export let list = [
-		{
-			content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec nisi"
-		}
-	]
+	import { userCred, userData } from '$lib/firebase/user';
 </script>
 
 <header>
 	<div class="avatar-wrapper">
-		<a href="/" id="avatar">
-			<img src="/favicon.png" alt="Avatar" />
-		</a>
-		<h5>loremipsum</h5>
-		<img
-			src="https://cdn.jsdelivr.net/npm/flag-icons/flags/4x3/vn.svg"
-			alt="Country Flag"
-			id="flag"
-		/>
+		{#if $userCred && $userData}
+			<a href="/profile/{$userCred.uid}" id="avatar">
+				<img src="{$userCred.photoURL}" alt="Avatar" />
+			</a>
+			<div class="name-uid">
+				<Text root="a" href="/profile/{$userCred.uid}" override={{ cursor: "pointer" }}>{$userCred.displayName}</Text>
+				<Text size={10}>UID: {$userCred.uid}</Text>
+			</div>
+		{/if}
 	</div>
 
 	<div class="nav-buttons">
-		{#each navicons as icon}
-			<Fa {icon} size="lg" style="cursor: pointer" />
-		{/each}
+		<Fa icon={faMessage} size="lg" style="cursor: pointer" />
 	</div>
 </header>
 
 <main>
 	<div class="welcome-text">
 		<Title align="center" size={80} variant='gradient' gradient={{from: 'pink', to: 'grape', deg: 45}}>Wedoku</Title>
-		<Title align="center" size={20}>Experience Sudoku like never before.</Title>
-		<div class="welcome-signup">
-			<Button on:click={signInGoogle} ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }} >
-				LOGIN
-			</Button>
-		</div>
+		{#if !($userCred && $userData)}
+			<Title align="center" size={20}>Experience Sudoku like never before.</Title>
+			<div class="welcome-signup">
+				<Button on:click={signInGoogle} ripple variant="gradient" size={50} gradient={{ from: 'grape', to: 'pink', deg: 35 }} >
+					LOGIN
+				</Button>
+			</div>
+		{/if}
 	</div>
 	
 	<div class="quick-start-buttons">
@@ -105,6 +96,7 @@
 	</div>
 		
 	<div class="tip-recommended-wrapper">
+		{#if $userCred && $userData}
 		<div class="recommended-match-wrapper">
 			<Title order={2}>Recommended Match</Title>
 			<div class="recommended-match">
@@ -126,28 +118,8 @@
 					Challenge
 				</Button>
 			</div>
-
-			<div class="recommended-match">
-				<div class="avatar-name">
-					<img src="/favicon.png" alt="Avatar" id="avatar" />
-					<h5>loremipsum</h5>
-					<img
-						src="https://cdn.jsdelivr.net/npm/flag-icons/flags/4x3/vn.svg"
-						alt="Country Flag"
-						id="flag"
-					/>
-				</div>
-				<div class="h2h-record">
-					<p class="score win">0</p>
-					<p class="score dash">/</p>
-					<p class="score loss">0</p>
-				</div>
-				<Button variant="gradient" gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
-					Challenge
-				</Button>
-			</div>
-			
 		</div>
+		{/if}
 	
 		<div class="daily-tip">
 			<div class="header">
@@ -158,28 +130,6 @@
 			<Text align="center">loremipsum</Text>
 		</div>
 
-		<div class="daily-tips-container">
-			<Button
-				fullSize
-				radius={0}
-				color="$dark-background-color"
-				override={{ fontSize: '1rem' }}
-				on:click={() => (opened = !opened)}
-			>
-			<Fa icon={faLightbulb} size="1.5x" />
-			</Button>
-			{#if opened}
-				<div class="friends-list" transition:slide>
-					{#each list as { content }}
-						<div class="friend">
-							<Text override={{ fontSize: '$xs', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-								{content}
-							</Text>
-						</div>
-					{/each}
-				</div>
-			{/if}
-		</div>
 	</div>
 
 </main>
@@ -211,8 +161,10 @@
 				}
 			}
 
-			#flag {
-				height: 30%;
+			.name-uid {
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
 			}
 		}
 
@@ -248,6 +200,8 @@
 			flex-direction: row;
 			justify-content: center;
 			gap: 5rem;
+
+			margin-top: 5rem;
 		}
 
 		.tip-recommended-wrapper {

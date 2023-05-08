@@ -6,10 +6,41 @@
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 
+	import { userCred, userData } from '$lib/firebase/user';
+	import { onAuthStateChanged } from 'firebase/auth';
+	import { doc, getDoc } from 'firebase/firestore';
+	import { auth, db } from "$lib/firebase/app";
+
 	const darkMode = writable(true);
 	setContext('darkMode', darkMode);
-</script>
 
+	onAuthStateChanged(auth, async (user) => {
+		if (user) {
+			$userCred = user
+			$userData = ((await getDoc(doc(db, "users", user.uid))).data())!
+		}
+		else {
+			$userCred = null;
+			$userData = null;
+		}
+	})
+</script>
+<!-- <script src="three.r134.min.js"></script>
+<script src="vanta.halo.min.js"></script>
+<script>
+VANTA.HALO({
+  el: "#your-element-selector",
+  mouseControls: true,
+  touchControls: true,
+  gyroControls: false,
+  minHeight: 200.00,
+  minWidth: 200.00,
+  size: 3.00
+})
+</script> -->
+
+<div id="vantajs">
+</div>
 <SvelteUIProvider
 	withGlobalStyles
 	withNormalizeCSS
@@ -28,9 +59,11 @@
 		<slot />
 	</main>
 
-	<section class="friends">
-		<FriendsList />
-	</section>
+	{#if $userCred && $userData}
+		<section class="friends">
+			<FriendsList />
+		</section>
+	{/if}
 </SvelteUIProvider>
 
 <style lang="scss">

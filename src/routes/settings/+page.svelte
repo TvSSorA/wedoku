@@ -1,5 +1,9 @@
 <script lang="ts">
-    import { Title, Text, Input, Button, Switch } from "@svelteuidev/core";
+    import { Title, Text, TextInput, Button, Switch } from "@svelteuidev/core";
+    import { userCred, userData } from "$lib/firebase/user";
+	import { db } from "$lib/firebase/app";
+	import { updateProfile } from "firebase/auth";
+	import { updateDoc, doc } from "firebase/firestore";
 </script>
 
 <div class="settings-wrapper">
@@ -15,8 +19,16 @@
             <div class="right">
                 <div class="setting">
                     <Text>Change username</Text>
-                    <Input type="text" pattern="[a-zA-Z0-9]+" placeholder="New username" override={{ input: { color: "$dark50 !important" }  }} />
-                    <Button variant="gradient" gradient={{ from: 'grape', to: 'pink', deg: 35 }}>
+                    <TextInput id="name-input" pattern="[a-zA-Z0-9]+" placeholder="New username" override={{ input: { color: "$dark50 !important" }  }} />
+                    <Button
+                        on:click={() => 
+                            {if ($userCred) { 
+                                updateProfile($userCred, { displayName: "SorA" }) 
+                            }}} 
+                        type="submit"
+                        variant="gradient" 
+                        gradient={{ from: 'grape', to: 'pink', deg: 35 }}
+                    >
                         Change
                     </Button>
                 </div>
@@ -32,7 +44,13 @@
             <div class="right">
                 <div class="setting">
                     <Text>Show online status</Text>
-                    <Switch checked color="grape"/>
+                    <Switch 
+                        on:click={() => 
+                            {if ($userCred && $userData) { 
+                                updateDoc(doc(db, "users", $userCred.uid), { "settings.showOnlineStatus": !$userData.settings.showOnlineStatus }) 
+                            }}}
+                        checked={$userData ? $userData.settings.showOnlineStatus : true} 
+                        color="grape"/> 
                 </div>
             </div>
         </div>
@@ -46,7 +64,13 @@
             <div class="right">
                 <div class="setting">
                     <Text>Allow Notifications</Text>
-                    <Switch checked color="grape"/>
+                    <Switch
+                        on:click={() => 
+                            {if ($userCred && $userData) { 
+                                updateDoc(doc(db, "users", $userCred.uid), { "settings.notifications": !$userData.settings.notifications }) 
+                            }}}
+                        checked={$userData ? $userData.settings.notifications : true} 
+                        color="grape"/>
                 </div>
             </div>
         </div>
@@ -62,11 +86,23 @@
                 <div class="setting">
                     <div class="music">
                         <Text>Enable music</Text>
-                        <Switch checked color="grape"/>
+                        <Switch 
+                            on:click={() => 
+                                {if ($userCred && $userData) { 
+                                    updateDoc(doc(db, "users", $userCred.uid), { "settings.music": !$userData.settings.music }) 
+                                }}}
+                            checked={$userData ? $userData.settings.music : true} 
+                            color="grape"/>
                     </div>
                     <div class="sound">
                         <Text>Enable sounds</Text>
-                        <Switch checked color="grape"/>
+                        <Switch 
+                            on:click={() => 
+                                {if ($userCred && $userData) { 
+                                    updateDoc(doc(db, "users", $userCred.uid), { "settings.sound": !$userData.settings.sound }) 
+                                }}}
+                            checked={$userData ? $userData.settings.sound : true} 
+                            color="grape"/>
                     </div>
                 </div>        
             </div>
