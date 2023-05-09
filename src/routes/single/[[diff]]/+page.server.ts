@@ -9,5 +9,4 @@ export const load = (async ({ params: { diff } }) => {
         return getBoard("easy");
     }
 
-}) satisfies PageServerLoad
-
+}) satisfies PageServerLoad;

@@ -1,5 +1,5 @@
 import type { FirebaseError } from "firebase/app";
-import { GoogleAuthProvider, signInWithPopup, type User } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut, type User } from "firebase/auth";
 import { doc, setDoc, type DocumentData } from "firebase/firestore";
 import { auth, db } from "./app";
 import { writable } from "svelte/store";
@@ -56,4 +56,11 @@ export function signInGoogle() {
             const credential = GoogleAuthProvider.credentialFromError(error);
             // ...
         });
+}
+
+export function signOutUser() {
+    signOut(auth)
+        .catch((error) => {
+            console.log(error)
+        })
 }

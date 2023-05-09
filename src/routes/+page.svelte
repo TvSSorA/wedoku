@@ -1,29 +1,37 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { faMessage, faLightbulb, faPencil, faKhanda, faBookTanakh } from '@fortawesome/free-solid-svg-icons';
+	import { faMessage, faUser, faRightFromBracket, faLightbulb, faPencil, faKhanda, faBookTanakh } from '@fortawesome/free-solid-svg-icons';
 	import { slide } from 'svelte/transition';
-	import { Card, Text, Title, Anchor, Button, Tooltip } from '@svelteuidev/core';
-	import { signInGoogle } from '$lib/firebase/user';
+	import { Card, Text, Title, Anchor, Button, Tooltip, Menu, Group, Stack } from '@svelteuidev/core';
+	import { signInGoogle, signOutUser } from '$lib/firebase/user';
 	import { userCred, userData } from '$lib/firebase/user';
 </script>
 
+{#if $userCred}
 <header>
-	<div class="avatar-wrapper">
-		{#if $userCred && $userData}
-			<a href="/profile/{$userCred.uid}" id="avatar">
-				<img src="{$userCred.photoURL}" alt="Avatar" />
-			</a>
-			<div class="name-uid">
-				<Text root="a" href="/profile/{$userCred.uid}" override={{ cursor: "pointer" }}>{$userCred.displayName}</Text>
+	<Menu trigger="hover" position="right" gutter={5}>
+		<Group slot="control" override={{ cursor: "pointer" }}>
+			<img src="{$userCred.photoURL}" alt="Avatar" />
+			<Stack>
+				<Text>{$userCred.displayName}</Text>
 				<Text size={10}>UID: {$userCred.uid}</Text>
-			</div>
-		{/if}
-	</div>
+			</Stack>
+		</Group>
+		
+		<!-- https://github.com/svelteuidev/svelteui/issues/373 -->
+		<Menu.Item root="a" href="/profile/{$userCred.uid}" icon={Fa} iconProps={{ iconProps: { icon: faUser }}}>
+			<Text>Profile</Text>
+		</Menu.Item>
+		<Menu.Item on:click={signOutUser} icon={Fa} iconProps={{ iconProps: { icon: faRightFromBracket, color: "red" }}}>
+			<Text color="red">Logout</Text>
+		</Menu.Item>
+	</Menu>
 
 	<div class="nav-buttons">
 		<Fa icon={faMessage} size="lg" style="cursor: pointer" />
 	</div>
 </header>
+{/if}
 
 <main>
 	<div class="welcome-text">
@@ -46,6 +54,7 @@
 				width: '25%',
 				'&:hover': { textDecoration: 'none' }
 			}}
+			data-sveltekit-preload-data="off"
 		>
 			<Card
 				override={{
@@ -144,28 +153,9 @@
 		flex-direction: row;
 		justify-content: space-between;
 
-		.avatar-wrapper {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			gap: 1rem;
-
-			height: 2rem;
-
-			#avatar {
-				height: 100%;
-
-				img {
-					aspect-ratio: 1;
-					height: 100%;
-				}
-			}
-
-			.name-uid {
-				display: flex;
-				flex-direction: column;
-				gap: 5px;
-			}
+		img {
+			aspect-ratio: 1;
+			width: 20%;
 		}
 
 		.nav-buttons {

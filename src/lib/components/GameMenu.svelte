@@ -8,7 +8,9 @@
 		faShareNodes,
 		faGem,
 		faGear,
-		faCircleQuestion
+		faCircleQuestion,
+		faPencil, 
+		faKhanda
 	} from '@fortawesome/free-solid-svg-icons';
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
@@ -29,8 +31,23 @@
 				<Fa slot="leftIcon" icon={faPlay} />
 				Play
 			</Button>
-			<Menu.Item root="a" href="/single"><Text size={14}>Single Player</Text></Menu.Item>
-			<Menu.Item><Text size={14}>Multiplayer</Text></Menu.Item>
+			<!-- https://github.com/svelteuidev/svelteui/issues/373 -->
+			<Menu.Item
+				root="a"
+				href="/single" 
+				data-sveltekit-preload-data="off"
+				icon={Fa}
+				iconProps={{ iconProps: { icon: faPencil }}}
+			>
+				<Text size={14}>Single Player</Text>
+			</Menu.Item>
+			<Menu.Item 
+				icon={Fa} 
+				iconProps={{ iconProps: { icon: faKhanda }}} 
+				data-sveltekit-preload-data="off"
+			>
+				<Text size={14}>Multiplayer</Text>
+			</Menu.Item>
 		</Menu>
 		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
 			<Button fullSize color="dark" radius={0} variant="subtle">
@@ -59,7 +76,7 @@
 	</div>
 	<div class="footer-buttons">
 		<Switch color="yellow" />
-		{#if !($userCred && !$userData)}
+		{#if $userCred && !$userData}
 		<Button href="/settings" fullSize color="dark" radius={0} variant="subtle">
 			<Fa slot="leftIcon" icon={faGear} />
 			Settings

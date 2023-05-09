@@ -59,11 +59,11 @@ VANTA.HALO({
 		<slot />
 	</main>
 
-	{#if $userCred && $userData}
-		<section class="friends">
+	<section class="friends">
+		{#if $userCred && $userData}
 			<FriendsList />
-		</section>
-	{/if}
+		{/if}
+	</section>
 </SvelteUIProvider>
 
 <style lang="scss">
