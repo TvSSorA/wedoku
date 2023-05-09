@@ -76,7 +76,7 @@
 	</div>
 	<div class="footer-buttons">
 		<Switch color="yellow" />
-		{#if $userCred && !$userData}
+		{#if $userCred && $userData}
 		<Button href="/settings" fullSize color="dark" radius={0} variant="subtle">
 			<Fa slot="leftIcon" icon={faGear} />
 			Settings

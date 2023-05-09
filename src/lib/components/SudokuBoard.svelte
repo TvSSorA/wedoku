@@ -16,21 +16,20 @@
 	let remainingCells = 0, errors = 0;
 	
 	$: if (!remainingCells && !errors) dispatch("solved");
-	$: {
-		currentBoard = board.map(row => [...row]); // Clone the board
-		rowMap = Array(9).fill(0).map(_ => Array(10).fill(0));
-		colMap = Array(9).fill(0).map(_ => Array(10).fill(0));
-		blockMap = Array(9).fill(0).map(_ => Array(10).fill(0));
-		for (let row = 0; row < 9; ++row)
-			for (let col = 0; col < 9; ++col)
-			{
-				let digit = currentBoard[row][col];
-				remainingCells += +(digit == 0);
-				rowMap[row][digit]++;
-				colMap[col][digit]++;
-				blockMap[blockFromCoords(row, col)][digit]++;
-			}
-	}
+
+	currentBoard = board.map(row => [...row]); // Clone the board
+	rowMap = Array(9).fill(0).map(_ => Array(10).fill(0));
+	colMap = Array(9).fill(0).map(_ => Array(10).fill(0));
+	blockMap = Array(9).fill(0).map(_ => Array(10).fill(0));
+	for (let row = 0; row < 9; ++row)
+		for (let col = 0; col < 9; ++col)
+		{
+			let digit = currentBoard[row][col];
+			remainingCells += +(digit == 0);
+			rowMap[row][digit]++;
+			colMap[col][digit]++;
+			blockMap[blockFromCoords(row, col)][digit]++;
+		}
 
 	let selected: Record<'row' | 'col' | 'block', number> | null = null;
 	let moves: string[] = [];
