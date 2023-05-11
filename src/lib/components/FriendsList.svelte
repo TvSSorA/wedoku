@@ -5,10 +5,12 @@
 	import { faCircle } from '@fortawesome/free-solid-svg-icons';
 	import { Button, Burger, Text } from '@svelteuidev/core';
 	import { userCred } from '$lib/firebase/user';
-	import { doc, onSnapshot } from 'firebase/firestore';
+	import { doc, onSnapshot, type DocumentData, getDoc } from 'firebase/firestore';
+	import { getAuth } from 'firebase-admin/auth';
 	import { db } from '$lib/firebase/app';
 
-	let friendsList: string[];
+	let rawFriendsList: string[];
+	let friendsList: DocumentData[] = [];
 
 	let opened = false;
 
@@ -18,10 +20,25 @@
 		offline: 'gray'
 	};
 
+	function getFriends() {
+		for (const friend of rawFriendsList) {
+			getAuth()
+				.getUser(friend)
+				.then(async (userRecord) => {
+					friendsList.push({
+						name: userRecord.displayName,
+						avatar: userRecord.photoURL,
+						onlineStatus: (await getDoc(doc(db, "users", friend))).data()!.onlineStatus
+					})
+				})
+		}
+	}
+
 	onMount(async () => {
 		onSnapshot(doc(db, "users", $userCred!.uid), (doc) => {
-			friendsList = (doc.data())!.friends
+			rawFriendsList = (doc.data())!.friends
 		})
+		getFriends()
 	});
 </script>
 

@@ -8,7 +8,7 @@
 
 	import { userCred, userData } from '$lib/firebase/user';
 	import { onAuthStateChanged } from 'firebase/auth';
-	import { doc, getDoc } from 'firebase/firestore';
+	import { doc, getDoc, updateDoc } from 'firebase/firestore';
 	import { auth, db } from "$lib/firebase/app";
 
 	const darkMode = writable(true);
@@ -17,6 +17,7 @@
 	onAuthStateChanged(auth, async (user) => {
 		if (user) {
 			$userCred = user
+			updateDoc(doc(db, "users", user.uid), { onlineStatus: "online"});
 			$userData = ((await getDoc(doc(db, "users", user.uid))).data())!
 		}
 		else {
@@ -86,5 +87,6 @@ VANTA.HALO({
 		width: 10vw;
 		height: 100vh;
 		overflow-x: visible;
+		z-index: 99;
 	}
 </style>

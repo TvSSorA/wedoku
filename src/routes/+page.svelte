@@ -5,6 +5,8 @@
 	import { Card, Text, Title, Anchor, Button, Tooltip, Menu, Group, Stack } from '@svelteuidev/core';
 	import { signInGoogle, signOutUser } from '$lib/firebase/user';
 	import { userCred, userData } from '$lib/firebase/user';
+	import { doc, updateDoc } from 'firebase/firestore';
+	import { db } from '$lib/firebase/app';
 </script>
 
 {#if $userCred}
@@ -22,7 +24,15 @@
 		<Menu.Item root="a" href="/profile/{$userCred.uid}" icon={Fa} iconProps={{ iconProps: { icon: faUser }}}>
 			<Text>Profile</Text>
 		</Menu.Item>
-		<Menu.Item on:click={signOutUser} icon={Fa} iconProps={{ iconProps: { icon: faRightFromBracket, color: "red" }}}>
+		<Menu.Item 
+			on:click={() => {
+				if ($userCred) {
+					updateDoc(doc(db, "users", $userCred.uid), { onlineStatus: "offline"});
+					signOutUser()
+				}
+			}} 
+			icon={Fa} 
+			iconProps={{ iconProps: { icon: faRightFromBracket, color: "red" }}}>
 			<Text color="red">Logout</Text>
 		</Menu.Item>
 	</Menu>

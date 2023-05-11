@@ -60,9 +60,9 @@
 		}
 	];
 
-	let playing = true;
+	export let playing = true;
 	let auto_paused = false;
-	let time = 0;
+	export let time = 0;
 	let cancelTimer: (() => void) | null = null;
 	$: {
 		if (browser) {
@@ -140,6 +140,8 @@
 		}
 	}}
 />
+
+<svelte:options accessors={true} />
 
 <div class="controller">
 	<div class="time-and-play-button">

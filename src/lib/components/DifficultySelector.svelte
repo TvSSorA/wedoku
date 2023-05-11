@@ -31,6 +31,8 @@
     {/each}
 </div>
 
+<svelte:options accessors={true} />
+
 <style lang="scss">
     div {
         display: flex;

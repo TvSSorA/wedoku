@@ -14,8 +14,6 @@
 	let currentBoard: number[][];
 	let rowMap: number[][], colMap: number[][], blockMap: number[][];
 	let remainingCells = 0, errors = 0;
-	
-	$: if (!remainingCells && !errors) dispatch("solved");
 
 	currentBoard = board.map(row => [...row]); // Clone the board
 	rowMap = Array(9).fill(0).map(_ => Array(10).fill(0));
@@ -32,7 +30,7 @@
 		}
 
 	let selected: Record<'row' | 'col' | 'block', number> | null = null;
-	let moves: string[] = [];
+	export let moves: string[] = [];
 	let notes: number[][] = Array(9).fill(0).map(_ => Array(9).fill(0));
 
 	function updateInternalStates(row: number, col: number, block: number,
@@ -55,6 +53,8 @@
 			+!!(++colMap[col][newDigit] == 2)      +
 			+!!(++blockMap[block][newDigit] == 2)
 		) * +!!(newDigit != 0);
+
+		if (!remainingCells && !errors) dispatch("solved");
 	}
 
 	export function insert(digit: number)
@@ -66,11 +66,6 @@
 		const oldDigit = currentBoard[row][col];
 		if (oldDigit === digit) return;
 		moves.unshift(`${row} ${col} ${oldDigit} ${digit}`);
-
-		if (oldDigit == 0 && digit != 0) // zero to non-zero
-			remainingCells--;
-		else if (oldDigit != 0 && digit == 0) // non-zero to zero
-			remainingCells++;
 		
 		updateInternalStates(row, col, block, oldDigit, digit);
 		currentBoard[row][col] = digit;
@@ -182,6 +177,8 @@
 		</div>
 	{/each}
 </div>
+
+<svelte:options accessors={true} />
 
 <style lang="scss">
 	.board {
