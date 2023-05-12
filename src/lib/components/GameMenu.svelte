@@ -10,7 +10,8 @@
 		faGear,
 		faCircleQuestion,
 		faPencil, 
-		faKhanda
+		faKhanda,
+		faVolumeUp
 	} from '@fortawesome/free-solid-svg-icons';
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
@@ -76,6 +77,11 @@
 	</div>
 	<div class="footer-buttons">
 		<Switch color="yellow" />
+		<audio src="https://www.bensound.com/bensound-music/bensound-moose.mp3"></audio>
+		<Button id="button" fullSize color="dark" radius={0} variant="subtle">
+		<i class="fas fa-volume-up"></i>
+		</Button>
+		
 		{#if $userCred && $userData}
 		<Button href="/settings" fullSize color="dark" radius={0} variant="subtle">
 			<Fa slot="leftIcon" icon={faGear} />

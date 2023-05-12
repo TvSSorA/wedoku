@@ -24,20 +24,9 @@
 			$userData = null;
 		}
 	})
+
 </script>
-<!-- <script src="three.r134.min.js"></script>
-<script src="vanta.halo.min.js"></script>
-<script>
-VANTA.HALO({
-  el: "#your-element-selector",
-  mouseControls: true,
-  touchControls: true,
-  gyroControls: false,
-  minHeight: 200.00,
-  minWidth: 200.00,
-  size: 3.00
-})
-</script> -->
+
 
 <div id="vantajs">
 </div>
@@ -51,6 +40,9 @@ VANTA.HALO({
 		gap: "4rem",
 	}}
 >
+
+	
+
 	<section class="menu">
 		<GameMenu />
 	</section>
