@@ -1,5 +1,5 @@
 import type { FirebaseError } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { collection, getFirestore, doc, setDoc } from "firebase/firestore";
 import { getDatabase, ref, set } from "firebase/database";
 import { app } from "./app";
@@ -22,16 +22,25 @@ export function signInGoogle() {
             if (user !== null) {
                 user.providerData.forEach((profile) => {
                   const userRef = {
-                    userName: profile.displayName,
-                    email: profile.email,
-                    photo: profile.photoURL,
                     dark: true,   //This is light/dark mode
                     music: true,
                     sound: true,
                     notifications: true,
                   };
+                  
                   setDoc(doc(db, "users", user.uid), userRef, {merge: true});
-                  signIntoRealTime(user.uid, profile.displayName, "", "", "");
+                  signIntoRealTime(user.uid, "", "", "");
+                });
+
+                onAuthStateChanged(auth, (user) => {
+                  if (user) {
+                    // User is signed in, see docs for a list of available properties
+                    const uid = user.uid;
+                    // ...
+                  } else {
+                    // User is signed out
+                    // ...
+                  }
                 });
             }
 
@@ -50,13 +59,12 @@ export function signInGoogle() {
     
 }
 
-export function signIntoRealTime(userId: string, userName: any, startPuzzle: string, nowPuzzle: string, answerPuzzle: string) {
+export function signIntoRealTime(userId: string, startPuzzle: string, nowPuzzle: string, answerPuzzle: string) {
     const db = getFirestore(app);
     const rtdb = getDatabase(app);
     const referenceRT = ref(rtdb, 'users/' + userId);
 
     set(referenceRT, {
-      username: userName,
       puzzleIntial: startPuzzle,
       puzzleCurrent: nowPuzzle,
       solution: answerPuzzle,
