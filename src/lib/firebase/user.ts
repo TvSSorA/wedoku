@@ -65,13 +65,12 @@ export function signOutUser() {
         })
 }
 
-export function signIntoRealTime(userId: string, userName: any, startPuzzle: string, nowPuzzle: string, answerPuzzle: string) {
+export function signIntoRealTime(userId: string, startPuzzle: string, nowPuzzle: string, answerPuzzle: string) {
     const db = getFirestore(app);
     const rtdb = getDatabase(app);
     const referenceRT = ref(rtdb, 'users/' + userId);
 
     set(referenceRT, {
-      username: userName,
       puzzleIntial: startPuzzle,
       puzzleCurrent: nowPuzzle,
       solution: answerPuzzle,
