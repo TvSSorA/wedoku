@@ -6,7 +6,6 @@
 	import { Button, Burger, Text } from '@svelteuidev/core';
 	import { userCred } from '$lib/firebase/user';
 	import { doc, onSnapshot, type DocumentData, getDoc } from 'firebase/firestore';
-	import { getAuth } from 'firebase-admin/auth';
 	import { db } from '$lib/firebase/app';
 
 	let rawFriendsList: string[];
@@ -20,25 +19,10 @@
 		offline: 'gray'
 	};
 
-	function getFriends() {
-		for (const friend of rawFriendsList) {
-			getAuth()
-				.getUser(friend)
-				.then(async (userRecord) => {
-					friendsList.push({
-						name: userRecord.displayName,
-						avatar: userRecord.photoURL,
-						onlineStatus: (await getDoc(doc(db, "users", friend))).data()!.onlineStatus
-					})
-				})
-		}
-	}
-
 	onMount(async () => {
 		onSnapshot(doc(db, "users", $userCred!.uid), (doc) => {
 			rawFriendsList = (doc.data())!.friends
 		})
-		getFriends()
 	});
 </script>
 
