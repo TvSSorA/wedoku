@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
 	import { faMessage, faUser, faRightFromBracket, faLightbulb, faPencil, faKhanda, faBookTanakh } from '@fortawesome/free-solid-svg-icons';
-	import { slide } from 'svelte/transition';
 	import { Card, Text, Title, Anchor, Button, Tooltip, Menu, Group, Stack } from '@svelteuidev/core';
 	import { signInGoogle, signOutUser } from '$lib/firebase/user';
 	import { userCred, userData } from '$lib/firebase/user';
@@ -21,7 +20,7 @@
 		</Group>
 		
 		<!-- https://github.com/svelteuidev/svelteui/issues/373 -->
-		<Menu.Item root="a" href="/profile/{$userCred.uid}" icon={Fa} iconProps={{ iconProps: { icon: faUser }}}>
+		<Menu.Item root="a" href="/profile/{$userCred.uid}" icon={Fa} iconProps={{ icon: faUser }}>
 			<Text>Profile</Text>
 		</Menu.Item>
 		<Menu.Item 
@@ -32,7 +31,7 @@
 				}
 			}} 
 			icon={Fa} 
-			iconProps={{ iconProps: { icon: faRightFromBracket, color: "red" }}}>
+			iconProps={{ icon: faRightFromBracket, color: "red" }}>
 			<Text color="red">Logout</Text>
 		</Menu.Item>
 	</Menu>
@@ -81,7 +80,15 @@
 			</Card>
 		</Anchor>
 
-		<Tooltip label="Coming soon!" color="grape" withArrow gutter={10} arrowSize={3} override={{ width: '25%' }}>
+		<Anchor
+			href="/multi"
+			override={{
+				textDecoration: 'none',
+				width: '25%',
+				'&:hover': { textDecoration: 'none' }
+			}}
+			data-sveltekit-preload-data="off"
+		>
 			<Card
 				override={{
 					display: 'flex',
@@ -95,7 +102,7 @@
 					<Text root="h3" weight={'bold'}>Play Multiplayer</Text>
 				</Card.Section>
 			</Card>
-		</Tooltip>
+		</Anchor>
 	
 		<Tooltip label="Coming soon!" color="grape" withArrow gutter={10} arrowSize={3} override={{ width: '25%' }}>
 			<Card

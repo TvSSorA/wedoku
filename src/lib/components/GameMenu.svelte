@@ -31,44 +31,45 @@
 				<Fa slot="leftIcon" icon={faPlay} />
 				Play
 			</Button>
-			<!-- https://github.com/svelteuidev/svelteui/issues/373 -->
 			<Menu.Item
 				root="a"
 				href="/single" 
 				data-sveltekit-preload-data="off"
 				icon={Fa}
-				iconProps={{ iconProps: { icon: faPencil }}}
+				iconProps={{ icon: faPencil }}
 			>
 				<Text size={14}>Single Player</Text>
 			</Menu.Item>
 			<Menu.Item 
+				root="a"
+				href="/multi"
 				icon={Fa} 
-				iconProps={{ iconProps: { icon: faKhanda }}} 
+				iconProps={{ icon: faKhanda }} 
 				data-sveltekit-preload-data="off"
 			>
 				<Text size={14}>Multiplayer</Text>
 			</Menu.Item>
 		</Menu>
 		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
-			<Button fullSize color="dark" radius={0} variant="subtle">
+			<Button fullSize color="blue" radius={0} variant="subtle"> 
 				<Fa slot="leftIcon" icon={faBook} />
 				Learn
 			</Button>
 		</Tooltip>
 		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
-			<Button fullSize color="dark" radius={0} variant="subtle">
+			<Button fullSize color="blue" radius={0} variant="subtle">
 				<Fa slot="leftIcon" icon={faNewspaper} />
 				News
 			</Button>
 		</Tooltip>
 		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
-			<Button fullSize color="dark" radius={0} variant="subtle">
+			<Button fullSize color="blue" radius={0} variant="subtle">
 				<Fa slot="leftIcon" icon={faShareNodes} />
 				Social
 			</Button>
 		</Tooltip>
 		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
-			<Button fullSize color="blue" radius={0} variant="subtle">
+			<Button fullSize color="yellow" radius={0} variant="subtle">
 				<Fa slot="leftIcon" icon={faGem} />
 				Premium
 			</Button>
@@ -77,12 +78,12 @@
 	<div class="footer-buttons">
 		<Switch color="yellow" />
 		{#if $userCred && $userData}
-		<Button href="/settings" fullSize color="dark" radius={0} variant="subtle">
+		<Button href="/settings" fullSize color="red" radius={0} variant="subtle">
 			<Fa slot="leftIcon" icon={faGear} />
 			Settings
 		</Button>
 		{/if}
-		<Button fullSize color="dark" radius={0} variant="subtle" >
+		<Button fullSize color="red" radius={0} variant="subtle" >
 			<Fa slot="leftIcon" icon={faCircleQuestion} />
 			Help
 		</Button>
@@ -108,10 +109,6 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-		}
-		.footer-buttons {
-			opacity: 0.7;
-			margin-bottom: 1rem;
 		}
 	}
 </style>
