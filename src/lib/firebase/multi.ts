@@ -11,7 +11,6 @@ const rtdb = getDatabase();
 
 
 export function createRoom() {
-    const db = getFirestore();
     const roomCreate = addDoc(collection(db, "rooms"), {
         winner: "",
         time: ""
@@ -20,6 +19,10 @@ export function createRoom() {
     const roomRef = collection(db, 'rooms')
     const roomId = roomRef.id
     createRoomRT(roomId);
+}
+
+export function removeRoom(roomID: string) {
+    
 }
 
 export function createRoomRT(roomID: string) {
