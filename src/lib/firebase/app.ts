@@ -3,6 +3,7 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyAUqY5UKxho8fC9QNI70YlhpQSoe_r2-2c",
     authDomain: "wedoku-d3500.firebaseapp.com",
