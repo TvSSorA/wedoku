@@ -11,6 +11,8 @@
         function createRoom(roomID: string) {
             setDoc(doc(db, "rooms", roomID), {
                 started: false,
+                ended: false,
+                winner: null,
                 difficulty: "easy",
                 blue: {
                     info: {

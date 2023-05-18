@@ -8,7 +8,7 @@
     import { faXmark, faCrown } from "@fortawesome/free-solid-svg-icons";
 	import { db } from "$lib/firebase/app";
 	import { userCred } from "$lib/firebase/user";
-    import { Text, Button, ActionIcon } from "@svelteuidev/core";
+    import { Text, Button, ActionIcon, Modal, Space } from "@svelteuidev/core";
 	import { deleteDoc, doc, onSnapshot, setDoc, type DocumentData, getDoc } from "firebase/firestore";
 	import { onDestroy, onMount } from "svelte";
     import { page } from "$app/stores";
@@ -18,15 +18,18 @@
     let room: DocumentData;
     let difficulty: string;
     let started: boolean;
+    let ended: boolean;
+    let winner: "blue" | "red";
     let owner: boolean;
     let slot: "blue" | "red" = "blue";
     $: opponentSlot = slot === "blue" ? "red" : "blue";
     $: if (room) {
-        ({difficulty, started} = room)
+        ({difficulty, started, ended, winner} = room)
         owner = room[slot].owner
     }
     
     let boardComponent: SudokuBoardMulti;
+    let controllerComponent: ControllerMulti;
     let board: number[][];
     let currentBoard: number[][];
     let fullBoard: number[][];
@@ -126,6 +129,14 @@
         }, { merge: true })
     }
 
+    function endMatch(roomID: string) {
+        controllerComponent.playing = false;
+        setDoc(doc(db, "rooms", roomID), {
+            ended: true,
+            winner: slot
+        }, { merge: true })
+    }
+
     onMount(async () => {
         room = (await getDoc(doc(db, "rooms", roomId))).data()!
         console.log(room)
@@ -146,9 +157,16 @@
 </script>
 {#if started}
 <div class="game">
-	<SudokuBoardMulti on:solved|once={() => {}} bind:this={boardComponent} bind:currentBoard {board} {fullBoard} {roomId} {slot}/>
-	<ControllerMulti board={boardComponent}/>
+	<SudokuBoardMulti on:solved|once={() => endMatch(roomId)} bind:this={boardComponent} bind:currentBoard {board} {fullBoard} {roomId} {slot}/>
+	<ControllerMulti bind:this={controllerComponent} board={boardComponent}/>
     <ProgressBoard {opponentSlot} {roomId}/>
+    {#if ended}
+    <Modal opened centered withCloseButton={false}>
+        <Text align="center" size={50} color={slot === winner ? "green" : "red"}>{slot === winner ? "You won!" : "You lost..."}</Text>
+        <Space h={100}/>
+        <Button href="/" color="grape">BACK TO MENU</Button>
+    </Modal>
+    {/if}
 </div>
 {:else}
 <div class="room">
