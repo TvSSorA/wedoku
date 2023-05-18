@@ -25,11 +25,35 @@
 		}
 	})
 
+	import { onMount } from 'svelte';
+
+	
+	import * as THREE from 'three';
+	import WAVES from 'vanta/dist/vanta.waves.min';
+
+	function vanta(node) {
+		WAVES ({
+			el: bg,
+			THREE: THREE,
+			mouseControls: true,
+			touchControls: true,
+			gyroControls: false,
+			minHeight: 200.00,
+			minWidth: 200.00,
+			scale: 1.00,
+			scaleMobile: 1.00,
+			color: 0x1A202C,
+			shininess: 5.00,
+			waveSpeed: 0.10,
+			zoom: 1.02
+		})
+
+	}
+
 </script>
 
+<div use:vanta id="bg"> </div>
 
-<div id="vantajs">
-</div>
 <SvelteUIProvider
 	withGlobalStyles
 	withNormalizeCSS
@@ -56,15 +80,16 @@
 			<FriendsList />
 		{/if}
 	</section>
+
 </SvelteUIProvider>
 
 <style lang="scss">
-	/* #bg {
+	 #bg {
 		position: fixed;
 		width: 100vw;
 		height: 100vh;
 		z-index: -99;
-	} */
+	} 
 
 	main {
 		width: 100%;

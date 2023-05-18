@@ -7,7 +7,6 @@
 		faLightbulb,
 		faPencil,
 		faKhanda,
-		faBookTanakh
 	} from '@fortawesome/free-solid-svg-icons';
 	import { slide } from 'svelte/transition';
 	import {
@@ -95,9 +94,7 @@
 				<div class="content">
 					<h1>Single-Player</h1>
 					<div class="des">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi ut adipisci saepe
-						laboriosam assumenda dolorem fuga natus, inventore a perspiciatis accusamus aperiam
-						sequi cupiditate velit repellendus reiciendis deleniti praesentium sit?
+						Enjoy the classic Sudoku puzzle game with our online Single Player Mode. Challenge yourself with various difficulty levels and track your progress as you improve your skills. Play anytime, anywhere and become a Sudoku master!
 					</div>
 				</div>
 			</a>
@@ -108,9 +105,7 @@
 			<div class="content">
 				<h1>Multiplayer</h1>
 				<div class="des">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi ut adipisci saepe
-					laboriosam assumenda dolorem fuga natus, inventore a perspiciatis accusamus aperiam sequi
-					cupiditate velit repellendus reiciendis deleniti praesentium sit?
+					Compete head-to-head with another player in our multiplayer mode and see who can solve the Sudoku puzzle the fastest. It's a thrilling test of skill and speed!
 				</div>
 			</div>
 		</div>
@@ -120,9 +115,7 @@
 			<div class="content">
 				<h1>Sudoku Lessons</h1>
 				<div class="des">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi ut adipisci saepe
-					laboriosam assumenda dolorem fuga natus, inventore a perspiciatis accusamus aperiam sequi
-					cupiditate velit repellendus reiciendis deleniti praesentium sit?
+					Take your Sudoku skills to the next level with our document page! Find tips, strategies, and tricks to help you become a Sudoku master. Learn from the best and beat the rest!
 				</div>
 			</div>
 		</div>
