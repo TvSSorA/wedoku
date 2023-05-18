@@ -5,7 +5,7 @@
 	import ControllerMulti from "$lib/components/ControllerMulti.svelte";
     import ProgressBoard from "$lib/components/ProgressBoard.svelte";
     import Fa from "svelte-fa";
-    import { faXmark } from "@fortawesome/free-solid-svg-icons";
+    import { faXmark, faCrown } from "@fortawesome/free-solid-svg-icons";
 	import { db } from "$lib/firebase/app";
 	import { userCred } from "$lib/firebase/user";
     import { Text, Button, ActionIcon } from "@svelteuidev/core";
@@ -19,7 +19,7 @@
     let difficulty: string;
     let started: boolean;
     let owner: boolean;
-    let slot = "blue";
+    let slot: "blue" | "red" = "blue";
     $: opponentSlot = slot === "blue" ? "red" : "blue";
     $: if (room) {
         ({difficulty, started} = room)
@@ -31,10 +31,14 @@
     let currentBoard: number[][];
     let fullBoard: number[][];
 
-    let info = {
-        uid: $userCred?.uid,
-        name: $userCred?.displayName,
-        avatar: $userCred?.photoURL
+    let info: Record<string, string | null>;
+
+    $: if ($userCred) {
+        info = {
+            uid: $userCred?.uid,
+            name: $userCred?.displayName,
+            avatar: $userCred?.photoURL
+        }
     }
 
     function deleteRoom(roomID: string) {
@@ -62,26 +66,30 @@
     }
 
     function addToRoom(roomID: string) {
-        const sides = ["blue", "red"];
+        const sides: ["blue", "red"] = ["blue", "red"];
 
-        for (const side of sides) {
-            if (room && room.blue.info.uid === null && room.red.info.uid === null) {
-                setDoc(doc(db, "rooms", roomID), {                        
-                    [side]: {
-                        owner: true
-                    }
-                }, { merge: true })
-            }
-            if (room && room[side].info.uid === null) {
-                setDoc(doc(db, "rooms", roomID), {                        
-                    [side]: {info}
-                }, { merge: true })
-                slot = side;
-                
-                return
-            }
-        }        
+        if (room) {
+            if (room.blue.info.uid === info.uid || room.red.info.uid === info.uid) return;
 
+            for (const side of sides) {
+                if (room.blue.info.uid === null && room.red.info.uid === null) {
+                    setDoc(doc(db, "rooms", roomID), {                        
+                        [side]: {
+                            owner: true
+                        }
+                    }, { merge: true })
+                }
+
+                if (room[side].info.uid === null) {
+                    setDoc(doc(db, "rooms", roomID), {                        
+                        [side]: {info}
+                    }, { merge: true })
+                    slot = side;
+                    
+                    return
+                }
+            }        
+        }
         // no more slots
     }
 
@@ -124,24 +132,17 @@
         addToRoom(roomId);
         onSnapshot(doc(db, "rooms", roomId), (doc) => {
 			room = doc.data()!
-		})
+		}) 
     })
     
-    /* onDestroy(async () => {
-        await setDoc(doc(db, "rooms", roomId), {
-            [slot]: {
-                info: {
-                    uid: null,
-                    name: null,
-                    avatar: null
-                }
-            }
-        }, { merge: true })
+    onDestroy(async () => {
+        removeFromRoom(slot, roomId)
 
-        if (room && room.blue.info.uid === null && room.red.info.uid === null) {
-            deleteRoom(roomId);
-        }
-    }) */
+        /* if (room.blue.info.uid === null || room.red.info.uid === null) {
+            console.log("game deleted")
+            deleteRoom(roomId)
+        } */
+    })
 </script>
 {#if started}
 <div class="game">
@@ -152,7 +153,7 @@
 {:else}
 <div class="room">
     <div class="difficulty">
-        <DifficultySelectorMulti bind:selected={difficulty} {roomId}/>
+        <DifficultySelectorMulti bind:selected={difficulty} {roomId} {owner}/>
     </div>
     
     {#if room}
@@ -172,6 +173,9 @@
                         <Fa icon={faXmark} size="lg"/>
                     </ActionIcon>
                     {/if}
+                    {#if room.blue.owner}
+                        <Fa icon={faCrown} size="lg" color="gold" />
+                    {/if}
                 </div>
             </div>
             {/if}
@@ -185,10 +189,13 @@
                         {#if room.red.info.avatar} <img src={room.red.info.avatar || ""} alt="avatar"> {/if}
                         <Text size={12} align="center" override={{ overflow: "hidden", textOverflow: "ellipsis" }}>{room.red.info.name || ""}</Text>
                     </div>
-                    {#if room.red.info.uid !== null && owner === true && room.red.owner !== owner}
+                    {#if room.red.info.uid !== null && owner && room.red.owner !== owner}
                     <ActionIcon color="red" on:click={() => removeFromRoom("red", roomId)}>
                         <Fa icon={faXmark} size="lg"/>
                     </ActionIcon>
+                    {/if}
+                    {#if room.red.owner}
+                        <Fa icon={faCrown} size="lg" color="gold" />
                     {/if}
                 </div>
             </div>
@@ -241,6 +248,7 @@
                     .player {
                         display: flex;
                         flex-direction: row;
+                        gap: 8px;
 
                         .info {
                             display: flex;

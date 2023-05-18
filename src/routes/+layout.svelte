@@ -25,25 +25,38 @@
 			$userData = null;
 		}
 	})
+	
+	import { onMount } from 'svelte';
+
+    import * as THREE from 'three';
+    import WAVES from 'vanta/dist/vanta.waves.min';
+
+
+    function vanta(node) {
+        WAVES ({
+            el: bg,
+            THREE: THREE,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x1A202C,
+            shininess: 5.00,
+            waveSpeed: 0.10,
+            zoom: 1.02
+        })
+
+
+    }
+
+
 </script>
-<!-- <script src="three.r134.min.js"></script>
-<script src="vanta.halo.min.js"></script>
-<script>
-VANTA.HALO({
-  el: "#your-element-selector",
-  mouseControls: true,
-  touchControls: true,
-  gyroControls: false,
-  minHeight: 200.00,
-  minWidth: 200.00,
-  size: 3.00
-})
-</script> -->
 
-<div id="vantajs">
 
-</div>
-
+<div use:vanta id="bg"> 
 
 <SvelteUIProvider
 	withGlobalStyles
@@ -69,7 +82,7 @@ VANTA.HALO({
 		{/if}
 	</section>
 </SvelteUIProvider>
-
+</div>
 <style lang="scss">
 	/* #bg {
 		position: fixed;

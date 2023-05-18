@@ -8,6 +8,7 @@
 
     export let selected: string;
     export let roomId: string;
+    export let owner: boolean;
     const difficulties = ["easy", "normal", "hard", "expert", "evil"];
 
     const darkMode: Readable<boolean> = getContext("darkMode");
@@ -25,9 +26,11 @@
                 textTransform: "capitalize",
             }}
             on:click={() => {
-                setDoc(doc(db, "rooms", roomId), {
-                    difficulty
-                }, { merge: true })
+                if (owner) {
+                    setDoc(doc(db, "rooms", roomId), {
+                        difficulty
+                    }, { merge: true })
+                }
 			}}
         >
             {difficulty}
