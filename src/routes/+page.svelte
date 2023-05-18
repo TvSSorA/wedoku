@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { faMessage, faUser, faRightFromBracket, faLightbulb, faPencil, faKhanda, faBookTanakh } from '@fortawesome/free-solid-svg-icons';
+	import { faMessage, faUser, faRightFromBracket, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 	import { Card, Text, Title, Anchor, Button, Tooltip, Menu, Group, Stack } from '@svelteuidev/core';
 	import { signInGoogle, signOutUser } from '$lib/firebase/user';
 	import { userCred, userData } from '$lib/firebase/user';
@@ -55,70 +55,43 @@
 		{/if}
 	</div>
 	
-	<div class="quick-start-buttons">
-		<Anchor
-			href="/single"
-			override={{
-				textDecoration: 'none',
-				width: '25%',
-				'&:hover': { textDecoration: 'none' }
-			}}
-			data-sveltekit-preload-data="off"
-		>
-			<Card
-				override={{
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					'&:hover': { backgroundColor: '$dark400' }
-				}}
-			>
-			<Fa icon={faPencil} size="10x" />
-				<Card.Section>
-					<Text root="h3" weight={'bold'}>Play Single-Player</Text>
-				</Card.Section>
-			</Card>
-		</Anchor>
+	<div class="list" >
+		<div class="item">
+			<a href="/single">
+				<img src="/1.jpg" alt="" />
+				<div class="content">
+					<h1>Single-Player</h1>
+					<div class="des">
+						Enjoy the classic Sudoku puzzle game with our online Single Player Mode. Challenge yourself with various difficulty levels 
+						and track your progress as you improve your skills. Play anytime, anywhere and become a Sudoku master!
+					</div>
+				</div>
+			</a>
+		</div>
 
-		<Anchor
-			href="/multi"
-			override={{
-				textDecoration: 'none',
-				width: '25%',
-				'&:hover': { textDecoration: 'none' }
-			}}
-			data-sveltekit-preload-data="off"
-		>
-			<Card
-				override={{
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					'&:hover': { backgroundColor: '$dark400' }
-				}}
-			>
-			<Fa icon={faKhanda} size="10x" />
-				<Card.Section>
-					<Text root="h3" weight={'bold'}>Play Multiplayer</Text>
-				</Card.Section>
-			</Card>
-		</Anchor>
-	
-		<Tooltip label="Coming soon!" color="grape" withArrow gutter={10} arrowSize={3} override={{ width: '25%' }}>
-			<Card
-				override={{
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					'&:hover': { backgroundColor: '$dark400' }
-				}}
-			>
-			<Fa icon={faBookTanakh} size="10x" />
-				<Card.Section>
-					<Text root="h3" weight={'bold'}>Sudoku Lessons</Text>
-				</Card.Section>
-			</Card>
-		</Tooltip>
+		<div class="item">
+			<a href="/multi">
+				<img src="/2.jpg" alt="" />
+				<div class="content">
+					<h1>Multiplayer</h1>
+					<div class="des">
+						Compete head-to-head with another player in our multiplayer mode and see who can solve the Sudoku puzzle the fastest. It's 
+						a thrilling test of skill and speed!
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<div class="item">
+			<img src="/3.jpg" alt="" />
+			<div class="content">
+				<h1>Sudoku Lessons</h1>
+				<div class="des">
+					Take your Sudoku skills to the next level with our document page! Find tips, strategies, and tricks to help you become a 
+					Sudoku master. Learn from the best and beat the rest!
+				</div>
+			</div>
+		</div>
 	</div>
 		
 	<div class="tip-recommended-wrapper">
@@ -202,13 +175,45 @@
 			}
 		}
 
-		.quick-start-buttons {
-			display: flex;
-			flex-direction: row;
-			justify-content: center;
-			gap: 5rem;
-
-			margin-top: 5rem;
+		.list {			
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			margin: 0 auto;
+  			width: 1000px;
+			grid-template-rows: 450px;
+			gap: 3rem;
+			.item {
+				color: #fff;
+				position: relative;
+				transition: 0.5s;
+				img {
+					width: 100%;
+					height: 100%;
+					border-radius: 20px;
+					object-fit: cover;
+					transition: 0.5s;
+				}
+				&:hover {
+					img {
+						transform: scale(1.2);
+						filter: blur(8px) brightness(40%);
+						
+					}
+					.content {
+						opacity: 1;
+						transform: translateY(0);
+					}
+				}
+				.content {
+					position: absolute;
+					bottom: 0;
+					color: #fff;
+					padding: 20px;
+					transform: translateY(100px);
+					opacity: 0;
+					transition: 0.5s;
+				}
+			}
 		}
 
 		.tip-recommended-wrapper {

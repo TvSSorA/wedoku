@@ -3,8 +3,11 @@
     import { getContext } from "svelte";
     import { buttonStyles } from "$lib/frontend/ColorScheme";
     import type { Readable } from "svelte/store";
+	import { doc, setDoc } from "firebase/firestore";
+	import { db } from "$lib/firebase/app";
 
     export let selected: string;
+    export let roomId: string;
     const difficulties = ["easy", "normal", "hard", "expert", "evil"];
 
     const darkMode: Readable<boolean> = getContext("darkMode");
@@ -22,7 +25,9 @@
                 textTransform: "capitalize",
             }}
             on:click={() => {
-                selected = difficulty
+                setDoc(doc(db, "rooms", roomId), {
+                    difficulty
+                }, { merge: true })
 			}}
         >
             {difficulty}

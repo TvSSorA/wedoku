@@ -41,7 +41,10 @@ VANTA.HALO({
 </script> -->
 
 <div id="vantajs">
+
 </div>
+
+
 <SvelteUIProvider
 	withGlobalStyles
 	withNormalizeCSS
