@@ -20,7 +20,7 @@
     {#each difficulties as difficulty}
         <Button
             color={fg}
-            variant={selected === difficulty ? "filled" : "subtle"}
+            variant={selected === difficulty ? "filled" : "outline"}
             override={{
                 textTransform: "capitalize",
             }}

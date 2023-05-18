@@ -1,3 +1,4 @@
+<!-- blame firebase's strict client side query for all the if (room) checks lol -->
 <script lang="ts">
     import DifficultySelectorMulti from "$lib/components/DifficultySelectorMulti.svelte";
     import SudokuBoardMulti from "$lib/components/SudokuBoardMulti.svelte";
@@ -196,7 +197,7 @@
     </div>
     {/if}
 
-    <Button disabled={!owner} on:click={() => startMatch(roomId)} variant="gradient" gradient={{ from: 'grape', to: 'pink', deg: 35 }}>START MATCH</Button>
+    <Button disabled={!owner} on:click={() => startMatch(roomId)} color="grape">START MATCH</Button>
     <Text>ROOM ID: {roomId}</Text>
 </div>
 {/if}
