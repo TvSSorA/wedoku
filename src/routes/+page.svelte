@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { faMessage, faUser, faRightFromBracket, faLightbulb } from '@fortawesome/free-solid-svg-icons';
-	import { Card, Text, Title, Anchor, Button, Tooltip, Menu, Group, Stack } from '@svelteuidev/core';
+	import { faMessage, faUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+	import { Text, Title, Button, Menu, Group, Stack } from '@svelteuidev/core';
 	import { signInGoogle, signOutUser } from '$lib/firebase/user';
 	import { userCred, userData } from '$lib/firebase/user';
 	import { doc, updateDoc } from 'firebase/firestore';
@@ -119,16 +119,6 @@
 			</div>
 		</div>
 		{/if}
-	
-		<div class="daily-tip">
-			<div class="header">
-				<Fa icon={faLightbulb} size="1.5x" />
-				<Title order={3}>Did you know?</Title>
-			</div>
-
-			<Text align="center">loremipsum</Text>
-		</div>
-
 	</div>
 
 </main>
@@ -266,24 +256,6 @@
 							color: rgba(208, 37, 37, 0.782);
 						}
 					}
-				}
-			}
-
-			.daily-tip {
-
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				gap: 1rem;
-
-				padding: 0 1rem;
-				background-color: $menu-div-color;
-
-				.header {
-					display: flex;
-					flex-direction: row;
-					gap: 1rem;
-					align-items: center;
 				}
 			}
 		}

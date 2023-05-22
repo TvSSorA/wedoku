@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { Button, Switch, Tooltip, Menu, Text } from '@svelteuidev/core';
+	import { Button, Tooltip, Menu, Text } from '@svelteuidev/core';
 	import {
 		faPlay,
 		faBook,
@@ -76,7 +76,6 @@
 		</Tooltip>
 	</div>
 	<div class="footer-buttons">
-		<Switch color="yellow" />
 		{#if $userCred && $userData}
 		<Button href="/settings" fullSize color="red" radius={0} variant="subtle">
 			<Fa slot="leftIcon" icon={faGear} />

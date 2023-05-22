@@ -11,6 +11,9 @@
 	import { doc, getDoc, updateDoc } from 'firebase/firestore';
 	import { auth, db } from "$lib/firebase/app";
 
+    import * as THREE from 'three';
+    import WAVES from 'vanta/dist/vanta.waves.min';
+
 	const darkMode = writable(true);
 	setContext('darkMode', darkMode);
 
@@ -25,22 +28,16 @@
 			$userData = null;
 		}
 	})
-	
-	import { onMount } from 'svelte';
 
-    import * as THREE from 'three';
-    import WAVES from 'vanta/dist/vanta.waves.min';
-
-
-    function vanta(node) {
+    function vanta(_node: HTMLDivElement) {
         WAVES ({
-            el: bg,
+            el: "#bg",
             THREE: THREE,
             mouseControls: true,
             touchControls: true,
             gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
+            minHeight: 100.00,
+            minWidth: 100.00,
             scale: 1.00,
             scaleMobile: 1.00,
             color: 0x1A202C,
@@ -51,45 +48,43 @@
 
 
     }
-
-
 </script>
 
+<div use:vanta id="bg" />
 
-<div use:vanta id="bg"> 
+<div use:vanta id="main"> 
+	<SvelteUIProvider
+		withGlobalStyles
+		withNormalizeCSS
+		themeObserver={'dark'}
+		override={{
+			display: "flex",
+			flexDirection: "row",
+			gap: "4rem",
+		}}
+	>
+		<section class="menu">
+			<GameMenu />
+		</section>
+		
+		<main>
+			<slot />
+		</main>
 
-<SvelteUIProvider
-	withGlobalStyles
-	withNormalizeCSS
-	themeObserver={'dark'}
-	override={{
-		display: "flex",
-		flexDirection: "row",
-		gap: "4rem",
-	}}
->
-	<section class="menu">
-		<GameMenu />
-	</section>
-	
-	<main>
-		<slot />
-	</main>
-
-	<section class="friends">
-		{#if $userCred && $userData}
-			<FriendsList />
-		{/if}
-	</section>
-</SvelteUIProvider>
+		<section class="friends">
+			{#if $userCred && $userData}
+				<FriendsList />
+			{/if}
+		</section>
+	</SvelteUIProvider>
 </div>
 <style lang="scss">
-	/* #bg {
+	#bg {
 		position: fixed;
 		width: 100vw;
 		height: 100vh;
 		z-index: -99;
-	} */
+	}
 
 	main {
 		width: 100%;
