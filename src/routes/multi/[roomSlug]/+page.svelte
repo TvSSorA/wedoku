@@ -34,6 +34,13 @@
     let currentBoard: number[][];
     let fullBoard: number[][];
 
+    $: if (room) {
+        if (room[slot].boards) {
+            board = JSON.parse(room[slot].boards.board);   
+            fullBoard = JSON.parse(room[slot].boards.fullBoard);   
+        }
+    }
+
     let info: Record<string, string | null>;
 
     $: if ($userCred) {
@@ -110,7 +117,7 @@
     }
 
     async function startMatch(roomID: string) {
-        //if (room.blue.info.uid === null || room.red.info.uid === null) return
+        // if (room.blue.info.uid === null || room.red.info.uid === null) return
         ({ board, fullBoard } = await getBoard(difficulty))
         const boards = {
             board: JSON.stringify(board),

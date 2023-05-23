@@ -108,6 +108,14 @@
             </div>
         </div>
     </div>
+
+    <Button 
+        variant="gradient" 
+        gradient={{ from: 'grape', to: 'pink', deg: 35 }}
+        href="/settings"
+    >
+    Save Settings
+    </Button>
 </div>
 
 <style lang="scss">

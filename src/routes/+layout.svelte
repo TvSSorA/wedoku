@@ -14,6 +14,8 @@
     import * as THREE from 'three';
     import WAVES from 'vanta/dist/vanta.waves.min';
 
+	import { Howl, Howler } from 'howler';
+
 	const darkMode = writable(true);
 	setContext('darkMode', darkMode);
 
@@ -46,8 +48,19 @@
             zoom: 1.02
         })
     }
+
+	let sound;
+
+	$: if ($userData) {
+		sound = new Howl({
+		src: ['/theme.mp3'],
+		volume: 0.5,
+		autoplay: $userData!.settings.music
+	})
+	}
 </script>
 
+<!-- svelte-ignore a11y-mouse-events-have-key-events -->
 <div use:vanta id="bg" />
 
 <div id="main"> 
