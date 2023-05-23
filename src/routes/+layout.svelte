@@ -36,8 +36,8 @@
             mouseControls: true,
             touchControls: true,
             gyroControls: false,
-            minHeight: 100.00,
-            minWidth: 100.00,
+            minHeight: 200.00,
+            minWidth: 200.00,
             scale: 1.00,
             scaleMobile: 1.00,
             color: 0x1A202C,
@@ -45,14 +45,12 @@
             waveSpeed: 0.10,
             zoom: 1.02
         })
-
-
     }
 </script>
 
 <div use:vanta id="bg" />
 
-<div use:vanta id="main"> 
+<div id="main"> 
 	<SvelteUIProvider
 		withGlobalStyles
 		withNormalizeCSS

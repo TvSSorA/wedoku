@@ -9,7 +9,7 @@
 	import { db } from "$lib/firebase/app";
 	import { userCred } from "$lib/firebase/user";
     import { Text, Button, ActionIcon, Modal, Space } from "@svelteuidev/core";
-	import { deleteDoc, doc, onSnapshot, setDoc, type DocumentData, getDoc } from "firebase/firestore";
+	import { deleteDoc, doc, onSnapshot, setDoc, type DocumentData, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 	import { onDestroy, onMount } from "svelte";
     import { page } from "$app/stores";
     import { getBoard } from "$lib/firebase/boardFirebase";
@@ -129,12 +129,26 @@
         }, { merge: true })
     }
 
+    function recordGame() {
+        updateDoc(doc(db, "users", $userCred!.uid), {
+            pvpGameHistory: arrayUnion({
+                difficulty,
+                board: JSON.stringify(board),
+                fullBoard: JSON.stringify(fullBoard),
+                blue: room.blue.info,
+                red: room.red.info,
+                winner: slot
+            })
+        })
+    }
+
     function endMatch(roomID: string) {
         controllerComponent.playing = false;
         setDoc(doc(db, "rooms", roomID), {
             ended: true,
             winner: slot
         }, { merge: true })
+        recordGame()
     }
 
     onMount(async () => {
