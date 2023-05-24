@@ -1,6 +1,6 @@
 import type { FirebaseError } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup, signOut, type User } from "firebase/auth";
-import { doc, setDoc, type DocumentData } from "firebase/firestore";
+import { doc, setDoc, type DocumentData, getDoc } from "firebase/firestore";
 import { auth, db } from "./app";
 import { writable } from "svelte/store";
 import type { UserDoc } from "$lib/types";
@@ -13,14 +13,15 @@ export function signInGoogle() {
     const provider = new GoogleAuthProvider();
 
     signInWithPopup(auth, provider)
-        .then((result) => {
+        .then(async (result) => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential!.accessToken;
             // The signed-in user info.
             const user = result.user;
             // IdP data available using getAdditionalUserInfo(result)
-            if (user !== null) {
+            const currentUserData = await getDoc(doc(db, "users", user.uid))
+            if (user !== null && !(currentUserData.exists())) {
                 const userObj: UserDoc = {
                     onlineStatus: "online",
                     settings: {

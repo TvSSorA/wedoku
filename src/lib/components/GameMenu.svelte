@@ -41,11 +41,12 @@
 				<Text size={14}>Single Player</Text>
 			</Menu.Item>
 			<Menu.Item 
-				root="a"
-				href="/multi"
+				root={$userCred && $userData ? "a" : ""}
+				href={$userCred && $userData ? "/multi" : ""}
 				icon={Fa} 
 				iconProps={{ icon: faKhanda }} 
 				data-sveltekit-preload-data="off"
+				disabled={!(!!$userCred && !!$userData)}
 			>
 				<Text size={14}>Multiplayer</Text>
 			</Menu.Item>
@@ -82,10 +83,12 @@
 			Settings
 		</Button>
 		{/if}
-		<Button fullSize color="red" radius={0} variant="subtle" >
-			<Fa slot="leftIcon" icon={faCircleQuestion} />
-			Help
-		</Button>
+		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
+			<Button fullSize color="red" radius={0} variant="subtle" >
+				<Fa slot="leftIcon" icon={faCircleQuestion} />
+				Help
+			</Button>
+		</Tooltip>
 	</div>
 </section>
 

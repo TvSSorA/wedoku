@@ -84,17 +84,17 @@
 		</main>
 
 		<section class="friends">
-			{#if $userCred && $userData}
+			<!--{#if $userCred && $userData}
 				<FriendsList />
-			{/if}
+			{/if} -->
 		</section>
 	</SvelteUIProvider>
 </div>
 <style lang="scss">
 	#bg {
 		position: fixed;
-		width: 100vw;
-		height: 100vh;
+		width: 100%;
+		height: 100%;
 		z-index: -99;
 	}
 

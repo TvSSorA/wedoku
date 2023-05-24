@@ -36,9 +36,9 @@
 		</Menu.Item>
 	</Menu>
 
-	<div class="nav-buttons">
+	<!-- <div class="nav-buttons">
 		<Fa icon={faMessage} size="lg" style="cursor: pointer" />
-	</div>
+	</div> -->
 </header>
 {/if}
 
@@ -70,7 +70,7 @@
 		</div>
 
 		<div class="item">
-			<a href="/multi">
+			<a href={$userCred && $userData ? "/multi" : ""}>
 				<img src="/2.jpg" alt="" />
 				<div class="content">
 					<h1>Multiplayer</h1>
@@ -78,6 +78,7 @@
 						Compete head-to-head with another player in our multiplayer mode and see who can solve the Sudoku puzzle the fastest. It's 
 						a thrilling test of skill and speed!
 					</div>
+					{#if !($userCred && $userData)}<h2 class="notice">Please sign in first!</h2>{/if}
 				</div>
 			</a>
 		</div>
@@ -90,11 +91,12 @@
 					Take your Sudoku skills to the next level with our document page! Find tips, strategies, and tricks to help you become a 
 					Sudoku master. Learn from the best and beat the rest!
 				</div>
+				<h2 class="notice">Coming Soon!</h2>
 			</div>
 		</div>
 	</div>
 		
-	<div class="tip-recommended-wrapper">
+	<!--<div class="tip-recommended-wrapper">
 		{#if $userCred && $userData}
 		<div class="recommended-match-wrapper">
 			<Title order={2}>Recommended Match</Title>
@@ -119,7 +121,7 @@
 			</div>
 		</div>
 		{/if}
-	</div>
+	</div> -->
 
 </main>
 
@@ -138,12 +140,12 @@
 			width: 20%;
 		}
 
-		.nav-buttons {
+		/* .nav-buttons {
 			display: flex;
 			flex-direction: row;
 			justify-content: flex-end;
 			gap: 1rem;
-		}
+		} */
 	}
 
 	main {
@@ -192,6 +194,9 @@
 					.content {
 						opacity: 1;
 						transform: translateY(0);
+
+						.notice {
+							color: rgba(255, 58, 58)						}
 					}
 				}
 				.content {
@@ -206,7 +211,7 @@
 			}
 		}
 
-		.tip-recommended-wrapper {
+		/* .tip-recommended-wrapper {
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
@@ -258,6 +263,6 @@
 					}
 				}
 			}
-		}
+		} */
 	}
 </style>
