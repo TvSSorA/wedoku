@@ -55,7 +55,8 @@
 		sound = new Howl({
 		src: ['/theme.mp3'],
 		volume: 0.5,
-		autoplay: $userData!.settings.music
+		autoplay: $userData!.settings.music,
+		loop: true
 	})
 	}
 </script>

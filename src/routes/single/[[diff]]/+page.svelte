@@ -29,7 +29,7 @@
 <div class="game">
 	<div class="diff-board-wrapper">
 		<DifficultySelector bind:selected={difficulty}/>
-		<SudokuBoard on:solved|once={recordGame} bind:this={boardComponent} board={data.board} fullBoard={data.fullBoard}/>
+		<SudokuBoard on:solved|once={recordGame} on:penalty={() => { if (controllerComponent.time) {controllerComponent.time += 60000} }} bind:this={boardComponent} board={data.board} fullBoard={data.fullBoard}/>
 	</div>
 
 	<Controller bind:this={controllerComponent} board={boardComponent}/>

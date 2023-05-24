@@ -79,6 +79,8 @@
 				digitSound.play()
 			}
 		}
+
+		if (digit !== fullBoard[row][col]) dispatch("penalty")
 	}
 
 	export function erase()
@@ -137,6 +139,8 @@
 		if ($userData!.settings.sound === true) {
 			hintSound.play()
 		}
+		
+		dispatch("penalty");
 	}
 
 	export function note(digit: number) {
