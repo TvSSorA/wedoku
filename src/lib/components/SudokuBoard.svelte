@@ -5,6 +5,8 @@
 	import { cellStyles } from '$lib/frontend/ColorScheme';
 	import { blockFromCoords } from '$lib/utils';
 	import type { Readable } from 'svelte/store';
+	import { userData } from '$lib/firebase/user';
+	import { Howl } from 'howler';
 
 	export let board: number[][];
 	export let fullBoard: number[][];
@@ -69,6 +71,14 @@
 		
 		updateInternalStates(row, col, block, oldDigit, digit);
 		currentBoard[row][col] = digit;
+		if ($userData!.settings.sound === true) {
+			if (digit === 0) {
+				eraseSound.play()
+			}
+			else {
+				digitSound.play()
+			}
+		}
 	}
 
 	export function erase()
@@ -88,6 +98,15 @@
 		
 		updateInternalStates(row, col, blockFromCoords(row, col), oldDigit, digit);
 		currentBoard[row][col] = digit;
+
+		if ($userData!.settings.sound === true) {
+			if (digit === 0) {
+				eraseSound.play()
+			}
+			else {
+				digitSound.play()
+			}
+		}
 	}
 
 	export function select(row: number, col: number)
@@ -114,6 +133,10 @@
 		updateInternalStates(row, col, block, currentBoard[row][col], fullBoard[row][col]);
 		currentBoard[row][col] = fullBoard[row][col];
 		moves = moves.filter(move => parseInt(move.split(' ')[0]) !== row || parseInt(move.split(' ')[1]) !== col)
+
+		if ($userData!.settings.sound === true) {
+			hintSound.play()
+		}
 	}
 
 	export function note(digit: number) {
@@ -122,6 +145,9 @@
 		if (board[row][col] !== 0) return;
 
 		notes[row][col] ^= (1 << digit);
+		if ($userData!.settings.sound === true) {
+			digitSound.play()
+		}
 	}
 
 	const darkMode: Readable<boolean> = getContext('darkMode');
@@ -143,6 +169,17 @@
 			return digitColor;
 		}
 	};
+
+	let digitSound = new Howl({
+		src: ['/digit.mp3']
+	})
+	let eraseSound = new Howl({
+		src: ['/erase.mp3'],
+		volume: 0.4
+	})
+	let hintSound = new Howl({
+		src: ['/hint.mp3']
+	})
 </script>
 
 <div class="board">

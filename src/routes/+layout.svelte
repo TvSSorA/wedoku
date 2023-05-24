@@ -14,7 +14,7 @@
     import * as THREE from 'three';
     import WAVES from 'vanta/dist/vanta.waves.min';
 
-	import { Howl, Howler } from 'howler';
+	import { Howl } from 'howler';
 
 	const darkMode = writable(true);
 	setContext('darkMode', darkMode);
