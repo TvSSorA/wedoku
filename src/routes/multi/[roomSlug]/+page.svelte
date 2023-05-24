@@ -5,7 +5,7 @@
 	import ControllerMulti from "$lib/components/ControllerMulti.svelte";
     import ProgressBoard from "$lib/components/ProgressBoard.svelte";
     import Fa from "svelte-fa";
-    import { faXmark, faCrown } from "@fortawesome/free-solid-svg-icons";
+    import { faXmark, faCrown, faRightFromBracket, faLink, faCheck } from "@fortawesome/free-solid-svg-icons";
 	import { db } from "$lib/firebase/app";
 	import { userCred } from "$lib/firebase/user";
     import { Text, Button, ActionIcon, Modal, Space } from "@svelteuidev/core";
@@ -51,8 +51,15 @@
         }
     }
 
+    let copied = false;
+
     function deleteRoom(roomID: string) {
         deleteDoc(doc(db, "rooms", roomID));
+    }
+
+    function copyMatchLink() {
+        navigator.clipboard.writeText(`127.0.0.1/multi/${roomId}`);
+        copied = true;
     }
 
     function moveToSlot(oldTeam: "blue" | "red", newTeam: "blue" | "red", roomID: string) {
@@ -103,6 +110,20 @@
         // no more slots
     }
 
+    function moveOwner(){
+        if (room[slot].owner === false) return
+        else {
+            setDoc(doc(db, "rooms", roomId),{
+                [slot]: {
+                    owner: false
+                },
+                [opponentSlot]: {
+                    owner: true
+                }
+            }, { merge: true })    
+        }
+    }
+
     function removeFromRoom(team: "blue" | "red", roomID: string) {
         setDoc(doc(db, "rooms", roomID), {
             [team]: {
@@ -110,10 +131,18 @@
                     uid: null,
                     name: null,
                     avatar: null
-                },
-                owner: false
+                }
             }
         }, { merge: true })
+    }
+
+    function kick(team: "blue" | "red", roomID: string) {
+        removeFromRoom(team, roomID);
+    }
+
+    function leaveRoom(team: "blue" | "red", roomID: string) {
+        removeFromRoom(team, roomID);
+        moveOwner();
     }
 
     async function startMatch(roomID: string) {
@@ -160,7 +189,6 @@
 
     onMount(async () => {
         room = (await getDoc(doc(db, "rooms", roomId))).data()!
-        console.log(room)
         addToRoom(roomId);
         onSnapshot(doc(db, "rooms", roomId), (doc) => {
 			room = doc.data()!
@@ -168,7 +196,7 @@
     })
     
     onDestroy(async () => {
-        removeFromRoom(slot, roomId)
+        leaveRoom(slot, roomId)
 
         /* if (room.blue.info.uid === null || room.red.info.uid === null) {
             console.log("game deleted")
@@ -208,7 +236,7 @@
                         <Text size={12} align="center" override={{ overflow: "hidden", textOverflow: "ellipsis" }}>{room.blue.info.name || ""}</Text>
                     </div>
                     {#if room.blue.info.uid !== null && owner && room.blue.owner !== owner}
-                    <ActionIcon color="red" on:click={() => removeFromRoom("blue", roomId)}>
+                    <ActionIcon color="red" on:click={() => kick("blue", roomId)}>
                         <Fa icon={faXmark} size="lg"/>
                     </ActionIcon>
                     {/if}
@@ -229,7 +257,7 @@
                         <Text size={12} align="center" override={{ overflow: "hidden", textOverflow: "ellipsis" }}>{room.red.info.name || ""}</Text>
                     </div>
                     {#if room.red.info.uid !== null && owner && room.red.owner !== owner}
-                    <ActionIcon color="red" on:click={() => removeFromRoom("red", roomId)}>
+                    <ActionIcon color="red" on:click={() => kick("red", roomId)}>
                         <Fa icon={faXmark} size="lg"/>
                     </ActionIcon>
                     {/if}
@@ -244,7 +272,32 @@
     {/if}
 
     <Button disabled={!owner} on:click={() => startMatch(roomId)} color="grape">START MATCH</Button>
+    <div class="exit-and-link">
+        <a href="/" style="text-decoration: none"><Button color="red"> <!-- bugs HMR if use <Button href> -->
+            <Fa icon={faRightFromBracket} slot="leftIcon"/>
+            Leave Room
+        </Button></a>
+        <div class="copy-button-wrapper">
+            <Button color="silver" on:click={copyMatchLink}>
+                <Fa icon={faLink} slot="leftIcon"/>
+                Copy Room ID
+            </Button>
+            {#if copied}
+                <Fa icon={faCheck} color="green" size="2.5x"/>
+            {/if}
+        </div>
+    </div>
     <Text>ROOM ID: {roomId}</Text>
+
+    {#if room && room[slot].info.uid === null}
+    <Modal opened centered withCloseButton={false}>
+        <Text align="center" size={50} color="red">Oopsie...</Text>
+        <Space h={20}/>
+        <Text align="center">Looks like you have been kicked from the room. You can always join another one though.</Text>
+        <Space h={100}/>
+        <Button href="/" color="grape">BACK TO MENU</Button>
+    </Modal>
+    {/if}
 </div>
 {/if}
 
@@ -324,6 +377,18 @@
                         }
                     }
                 }
+            }
+        }
+
+        .exit-and-link {
+            display: flex;
+            flex-direction: row;
+            gap: 50vw;
+
+            .copy-button-wrapper {
+                display: flex;
+                flex-direction: row;
+                gap: 1rem;
             }
         }
     }
