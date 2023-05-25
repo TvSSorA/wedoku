@@ -14,7 +14,7 @@
     <Title align="center" size={50} variant='gradient' gradient={{from: 'pink', to: 'grape', deg: 45}}>Settings</Title>
 
     <div class="settings">
-        <div class="game-name">
+        <!--<div class="game-name">
             <div class="left">
                 <div class="category">
                     <Title size={20} align="right">In-game name</Title>
@@ -37,7 +37,7 @@
                     </Button>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="online-status">
             <div class="left">
