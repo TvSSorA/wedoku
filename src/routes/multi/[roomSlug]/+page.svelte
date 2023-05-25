@@ -8,7 +8,7 @@
     import { faXmark, faCrown, faRightFromBracket, faLink, faCheck } from "@fortawesome/free-solid-svg-icons";
 	import { db } from "$lib/firebase/app";
 	import { userCred } from "$lib/firebase/user";
-    import { Text, Button, ActionIcon, Modal, Space } from "@svelteuidev/core";
+    import { Text, Button, ActionIcon, Modal, Space, Title, Overlay } from "@svelteuidev/core";
 	import { deleteDoc, doc, onSnapshot, setDoc, type DocumentData, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 	import { onDestroy, onMount } from "svelte";
     import { page } from "$app/stores";
@@ -52,6 +52,14 @@
     }
 
     let copied = false;
+
+    let countdown = 3;
+
+    function startCountdown() {
+        if (countdown !== 0) {
+            countdown--;
+        }
+    }
 
     function deleteRoom(roomID: string) {
         deleteDoc(doc(db, "rooms", roomID));
@@ -146,7 +154,7 @@
     }
 
     async function startMatch(roomID: string) {
-        // if (room.blue.info.uid === null || room.red.info.uid === null) return
+        if (room.blue.info.uid === null || room.red.info.uid === null) return
         ({ board, fullBoard } = await getBoard(difficulty))
         const boards = {
             board: JSON.stringify(board),
@@ -163,10 +171,22 @@
             },
             started: true
         }, { merge: true })
+
+        setInterval(startCountdown, 1000);
     }
 
     function recordGame() {
         updateDoc(doc(db, "users", $userCred!.uid), {
+            pvpGameHistory: arrayUnion({
+                difficulty,
+                board: JSON.stringify(board),
+                fullBoard: JSON.stringify(fullBoard),
+                blue: room.blue.info,
+                red: room.red.info,
+                winner: slot
+            })
+        })
+        updateDoc(doc(db, "users", room[opponentSlot].info.uid), {
             pvpGameHistory: arrayUnion({
                 difficulty,
                 board: JSON.stringify(board),
@@ -198,107 +218,118 @@
     onDestroy(async () => {
         leaveRoom(slot, roomId)
 
-        /* if (room.blue.info.uid === null || room.red.info.uid === null) {
+        if (room.blue.info.uid === null || room.red.info.uid === null) {
             console.log("game deleted")
             deleteRoom(roomId)
-        } */
+        }
     })
 </script>
 {#if started}
-<div class="game">
-	<SudokuBoardMulti on:solved|once={() => endMatch(roomId)} bind:this={boardComponent} bind:currentBoard {board} {fullBoard} {roomId} {slot}/>
-	<ControllerMulti bind:this={controllerComponent} board={boardComponent}/>
-    <ProgressBoard {opponentSlot} {roomId}/>
-    {#if ended}
-    <Modal opened centered withCloseButton={false}>
-        <Text align="center" size={50} color={slot === winner ? "green" : "red"}>{slot === winner ? "You won!" : "You lost..."}</Text>
-        <Space h={100}/>
-        <Button href="/" color="grape">BACK TO MENU</Button>
-    </Modal>
+    {#if countdown}
+        <Overlay opacity={0.6} color="#000" zIndex={5}/>
+        <Text size={500} weight="bold" align="center">{countdown}</Text>
+    {:else}
+    <div class="game">
+        <SudokuBoardMulti on:solved|once={() => endMatch(roomId)} bind:this={boardComponent} bind:currentBoard {board} {fullBoard} {roomId} {slot}/>
+        <ControllerMulti bind:this={controllerComponent} board={boardComponent}/>
+        <ProgressBoard {opponentSlot} {roomId}/>
+        {#if ended}
+        <Modal opened centered withCloseButton={false}>
+            <Text align="center" size={50} color={slot === winner ? "green" : "red"}>{slot === winner ? "You won!" : "You lost..."}</Text>
+            <Space h={100}/>
+            <Button href="/" color="grape">BACK TO MENU</Button>
+        </Modal>
+        {/if}
+    </div>
     {/if}
-</div>
 {:else}
-<div class="room">
-    <div class="difficulty">
-        <DifficultySelectorMulti bind:selected={difficulty} {roomId} {owner}/>
-    </div>
-    
     {#if room}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="teams">
-        <div class="team-blue">
-            <Text color='blue'>Blue Team</Text>
-            {#if room.blue}
-            <div class="players">
-                <div class="player" >
-                    <div class="info blue-team" on:click={() => moveToSlot("red", "blue", roomId)}>
-                        {#if room.blue.info.avatar} <img src={room.blue.info.avatar || ""} alt="avatar"> {/if}
-                        <Text size={12} align="center" override={{ overflow: "hidden", textOverflow: "ellipsis" }}>{room.blue.info.name || ""}</Text>
-                    </div>
-                    {#if room.blue.info.uid !== null && owner && room.blue.owner !== owner}
-                    <ActionIcon color="red" on:click={() => kick("blue", roomId)}>
-                        <Fa icon={faXmark} size="lg"/>
-                    </ActionIcon>
-                    {/if}
-                    {#if room.blue.owner}
-                        <Fa icon={faCrown} size="lg" color="gold" />
-                    {/if}
-                </div>
-            </div>
-            {/if}
+    <div class="room">
+        <div class="difficulty">
+            <DifficultySelectorMulti bind:selected={difficulty} {roomId} {owner}/>
         </div>
-        <div class="team-red">
-            <Text color='red'>Red Team</Text>
-            {#if room.red}
-            <div class="players">
-                <div class="player" >
-                    <div class="info red-team" on:click={() => moveToSlot("blue", "red", roomId)}>
-                        {#if room.red.info.avatar} <img src={room.red.info.avatar || ""} alt="avatar"> {/if}
-                        <Text size={12} align="center" override={{ overflow: "hidden", textOverflow: "ellipsis" }}>{room.red.info.name || ""}</Text>
+        
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="teams">
+            <div class="team-blue">
+                <Text color='blue'>Blue Team</Text>
+                {#if room.blue}
+                <div class="players">
+                    <div class="player" >
+                        <div class="info blue-team" on:click={() => moveToSlot("red", "blue", roomId)}>
+                            {#if room.blue.info.avatar} <img src={room.blue.info.avatar || ""} alt="avatar"> {/if}
+                            <Text size={12} align="center" override={{ overflow: "hidden", textOverflow: "ellipsis" }}>{room.blue.info.name || ""}</Text>
+                        </div>
+                        {#if room.blue.info.uid !== null && owner && room.blue.owner !== owner}
+                        <ActionIcon color="red" on:click={() => kick("blue", roomId)}>
+                            <Fa icon={faXmark} size="lg"/>
+                        </ActionIcon>
+                        {/if}
+                        {#if room.blue.owner}
+                            <Fa icon={faCrown} size="lg" color="gold" />
+                        {/if}
                     </div>
-                    {#if room.red.info.uid !== null && owner && room.red.owner !== owner}
-                    <ActionIcon color="red" on:click={() => kick("red", roomId)}>
-                        <Fa icon={faXmark} size="lg"/>
-                    </ActionIcon>
-                    {/if}
-                    {#if room.red.owner}
-                        <Fa icon={faCrown} size="lg" color="gold" />
-                    {/if}
                 </div>
+                {/if}
             </div>
-            {/if}
+            <div class="team-red">
+                <Text color='red'>Red Team</Text>
+                {#if room.red}
+                <div class="players">
+                    <div class="player" >
+                        <div class="info red-team" on:click={() => moveToSlot("blue", "red", roomId)}>
+                            {#if room.red.info.avatar} <img src={room.red.info.avatar || ""} alt="avatar"> {/if}
+                            <Text size={12} align="center" override={{ overflow: "hidden", textOverflow: "ellipsis" }}>{room.red.info.name || ""}</Text>
+                        </div>
+                        {#if room.red.info.uid !== null && owner && room.red.owner !== owner}
+                        <ActionIcon color="red" on:click={() => kick("red", roomId)}>
+                            <Fa icon={faXmark} size="lg"/>
+                        </ActionIcon>
+                        {/if}
+                        {#if room.red.owner}
+                            <Fa icon={faCrown} size="lg" color="gold" />
+                        {/if}
+                    </div>
+                </div>
+                {/if}
+            </div>
         </div>
+
+        <Button disabled={!owner} on:click={() => startMatch(roomId)} color="grape">START MATCH</Button>
+        <div class="exit-and-link">
+            <a href="/" style="text-decoration: none"><Button color="red"> <!-- bugs HMR if use <Button href> -->
+                <Fa icon={faRightFromBracket} slot="leftIcon"/>
+                Leave Room
+            </Button></a>
+            <div class="copy-button-wrapper">
+                <Button color="silver" on:click={copyMatchLink}>
+                    <Fa icon={faLink} slot="leftIcon"/>
+                    Copy Room ID
+                </Button>
+                {#if copied}
+                    <Fa icon={faCheck} color="green" size="2.5x"/>
+                {/if}
+            </div>
+        </div>
+        <Text>ROOM ID: {roomId}</Text>
+
+        {#if room[slot].info.uid === null}
+        <Modal opened centered withCloseButton={false}>
+            <Text align="center" size={50} color="red">Oopsie...</Text>
+            <Space h={20}/>
+            <Text align="center">Looks like you have been kicked from the room. You can always join another one though.</Text>
+            <Space h={100}/>
+            <Button href="/" color="grape">BACK TO MENU</Button>
+        </Modal>
+        {/if}
+    </div>
+    {:else}
+    <div class="room-not-found">
+        <Title align="center" weight="bold">*cricket sounds*</Title>
+        <Text size={20}>Hmm, looks like this room does not exist. You can create a new one below.</Text>
+        <a href="/multi" style="text-decoration: none"><Button color="grape">CREATE NEW ROOM</Button></a>
     </div>
     {/if}
-
-    <Button disabled={!owner} on:click={() => startMatch(roomId)} color="grape">START MATCH</Button>
-    <div class="exit-and-link">
-        <a href="/" style="text-decoration: none"><Button color="red"> <!-- bugs HMR if use <Button href> -->
-            <Fa icon={faRightFromBracket} slot="leftIcon"/>
-            Leave Room
-        </Button></a>
-        <div class="copy-button-wrapper">
-            <Button color="silver" on:click={copyMatchLink}>
-                <Fa icon={faLink} slot="leftIcon"/>
-                Copy Room ID
-            </Button>
-            {#if copied}
-                <Fa icon={faCheck} color="green" size="2.5x"/>
-            {/if}
-        </div>
-    </div>
-    <Text>ROOM ID: {roomId}</Text>
-
-    {#if room && room[slot].info.uid === null}
-    <Modal opened centered withCloseButton={false}>
-        <Text align="center" size={50} color="red">Oopsie...</Text>
-        <Space h={20}/>
-        <Text align="center">Looks like you have been kicked from the room. You can always join another one though.</Text>
-        <Space h={100}/>
-        <Button href="/" color="grape">BACK TO MENU</Button>
-    </Modal>
-    {/if}
-</div>
 {/if}
 
 <style lang="scss">
@@ -391,5 +422,14 @@
                 gap: 1rem;
             }
         }
+    }
+
+    .room-not-found {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5rem;
+        
+        margin-top: 10rem;
     }
 </style>

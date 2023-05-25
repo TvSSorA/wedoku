@@ -78,10 +78,10 @@
 	</div>
 	<div class="footer-buttons">
 		{#if $userCred && $userData}
-		<Button href="/settings" fullSize color="red" radius={0} variant="subtle">
+		<a href="/settings" style="text-decoration: none"><Button fullSize color="red" radius={0} variant="subtle"> <!-- <Button href> bugs HMR -->
 			<Fa slot="leftIcon" icon={faGear} />
 			Settings
-		</Button>
+		</Button></a>
 		{/if}
 		<Tooltip label="Coming Soon!" position="right" withArrow arrowSize={3} color="grape">
 			<Button fullSize color="red" radius={0} variant="subtle" >

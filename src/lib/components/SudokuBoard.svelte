@@ -6,6 +6,7 @@
 	import { blockFromCoords } from '$lib/utils';
 	import type { Readable } from 'svelte/store';
 	import { userData } from '$lib/firebase/user';
+	import { slide } from 'svelte/transition';
 	import { Howl } from 'howler';
 
 	export let board: number[][];
