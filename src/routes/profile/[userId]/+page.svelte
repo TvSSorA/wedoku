@@ -43,7 +43,7 @@
             </thead>
             <tbody>
                 {#each data.soloGames as soloGame, i}
-                    {@const time = soloGame.time / 100}
+                    {@const time = Math.floor((soloGame.time + 60000) / 1000)}
                     {@const hours = Math.floor(time / 3600)}
                     {@const minutes = Math.floor((time % 3600) / 60)}
                     {@const seconds = time % 60}

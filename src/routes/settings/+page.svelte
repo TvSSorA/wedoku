@@ -135,7 +135,7 @@
             flex-direction: column;
             gap: 0.3rem;
 
-            .game-name, .online-status, .notifications, .volume {
+            .online-status, .notifications, .volume {
                 display: flex;
                 flex-direction: row;
                 justify-content: center;

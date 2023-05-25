@@ -71,7 +71,7 @@
     }
 
     function copyMatchLink() {
-        navigator.clipboard.writeText(`wedoku.vercel.app/multi/${roomId}`);
+        navigator.clipboard.writeText($page.url);
         copied = true;
     }
 
