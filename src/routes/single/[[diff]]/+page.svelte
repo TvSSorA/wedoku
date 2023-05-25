@@ -26,6 +26,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Single Player Mode</title>
+</svelte:head>
+
 <div class="game">
 	<div class="diff-board-wrapper">
 		<DifficultySelector bind:selected={difficulty}/>

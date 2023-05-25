@@ -15,6 +15,10 @@
     }
 </script>
 
+<svelte:head>
+	<title>Profile Page</title>
+</svelte:head>
+
 {#if $userCred}
 <div class="profile">
     <div class="user-info">

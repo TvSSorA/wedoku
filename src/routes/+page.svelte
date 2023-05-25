@@ -8,6 +8,10 @@
 	import { db } from '$lib/firebase/app';
 </script>
 
+<svelte:head>
+	<title>Wedoku</title>
+</svelte:head>
+
 {#if $userCred}
 <header>
 	<Menu trigger="hover" position="right" gutter={5}>

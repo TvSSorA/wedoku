@@ -62,7 +62,7 @@
         if (countdown !== 0) {
             setDoc(doc(db, "rooms", roomId), {
                 countdown: countdown - 1
-            })
+            }, { merge: true })
         }
     }
 
@@ -229,6 +229,11 @@
         }
     })
 </script>
+
+<svelte:head>
+	<title>Multiplayer Mode</title>
+</svelte:head>
+
 {#if started}
     {#if countdown}
         <Overlay opacity={0.6} color="#000" zIndex={5}/>

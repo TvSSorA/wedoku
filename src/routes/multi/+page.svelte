@@ -39,4 +39,8 @@
     }
 </script>
 
+<svelte:head>
+	<title>Just a moment...</title>
+</svelte:head>
+
 <Title order={3} align="center" override={{ marginTop: "20rem" }}>Hang in tight while we do the magics~~</Title>

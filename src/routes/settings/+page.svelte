@@ -6,6 +6,10 @@
 	import { updateDoc, doc } from "firebase/firestore";
 </script>
 
+<svelte:head>
+	<title>Settings</title>
+</svelte:head>
+
 <div class="settings-wrapper">
     <Title align="center" size={50} variant='gradient' gradient={{from: 'pink', to: 'grape', deg: 45}}>Settings</Title>
 
