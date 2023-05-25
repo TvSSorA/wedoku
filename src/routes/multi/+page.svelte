@@ -10,6 +10,7 @@
     $: if ($userCred) {
         function createRoom(roomID: string) {
             setDoc(doc(db, "rooms", roomID), {
+                countdown: 3,
                 started: false,
                 ended: false,
                 winner: null,

@@ -53,11 +53,16 @@
 
     let copied = false;
 
-    let countdown = 3;
+    let countdown: number;
+    $: if (room) {
+        countdown = room.countdown;
+    }
 
     function startCountdown() {
         if (countdown !== 0) {
-            countdown--;
+            setDoc(doc(db, "rooms", roomId), {
+                countdown: countdown - 1
+            })
         }
     }
 
@@ -66,7 +71,7 @@
     }
 
     function copyMatchLink() {
-        navigator.clipboard.writeText(`127.0.0.1/multi/${roomId}`);
+        navigator.clipboard.writeText(`wedoku.vercel.app/multi/${roomId}`);
         copied = true;
     }
 
