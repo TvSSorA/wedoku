@@ -43,6 +43,7 @@ export function signInGoogle() {
                     savedGame: null
                 };
                 setDoc(doc(db, "users", user.uid), userObj, {  merge: true });
+                location.reload();
             }
 
             // Get Provider User into Firestore
