@@ -17,15 +17,45 @@
     let roomId = $page.params.roomSlug;
     let room: DocumentData;
     let difficulty: string;
+    let time: number;
+    let mistakes: number;
+    let remainingCells: number;
     let started: boolean;
     let ended: boolean;
-    let winner: "blue" | "red";
+    let winner: "blue" | "red" | "Draw";
     let owner: boolean;
     let slot: "blue" | "red" = "blue";
     $: opponentSlot = slot === "blue" ? "red" : "blue";
     $: if (room) {
-        ({difficulty, started, ended, winner} = room)
+        ({difficulty, started, ended, winner, time} = room)
         owner = room[slot].owner
+        mistakes = room[slot].mistakes
+    }
+
+    $: if (mistakes > 10) {
+        endMatch(roomId, opponentSlot)
+    }
+    $: if (room && time === 0) {
+        if (room[opponentSlot].boards) {
+            let opponentRemainingCells: number = 0;
+            let opponentBoard = JSON.parse(room[opponentSlot].boards.currentBoard)
+            
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    opponentRemainingCells += +(opponentBoard[row][col] == 0);
+                }
+            }
+
+            if (remainingCells > opponentRemainingCells) {
+                endMatch(roomId, opponentSlot)
+            }
+            else if (remainingCells < opponentRemainingCells) {
+                endMatch(roomId, slot)
+            }
+            else {
+                endMatch(roomId, "Draw")
+            }
+        }
     }
     
     let boardComponent: SudokuBoardMulti;
@@ -65,6 +95,25 @@
             }, { merge: true })
         }
     }
+
+    function startTimer() {
+        if (countdown === 0 && room[slot].owner === true) {
+            setDoc(doc(db, "rooms", roomId), {
+                time: time - 1000
+            }, { merge: true })
+        }
+    }
+
+    function formatTime(ms: number) {	
+		const s = Math.floor(ms / 1000);
+		const m = Math.floor(s / 60);
+		const h = Math.floor(m / 60);
+		return (
+			(h ? `${h.toString().padStart(2, '0')}:` : '') +
+			`${(m % 60).toString().padStart(2, '0')}:` +
+			`${(s % 60).toString().padStart(2, '0')}`
+		);
+	}
 
     function deleteRoom(roomID: string) {
         deleteDoc(doc(db, "rooms", roomID));
@@ -178,6 +227,7 @@
         }, { merge: true })
 
         setInterval(startCountdown, 1000);
+        setInterval(startTimer, 1000);
     }
 
     function recordGame() {
@@ -203,11 +253,11 @@
         })
     }
 
-    function endMatch(roomID: string) {
+    function endMatch(roomID: string, team: string) {
         controllerComponent.playing = false;
         setDoc(doc(db, "rooms", roomID), {
             ended: true,
-            winner: slot
+            winner: team
         }, { merge: true })
         recordGame()
     }
@@ -239,17 +289,21 @@
         <Overlay opacity={0.6} color="#000" zIndex={5}/>
         <Text size={500} weight="bold" align="center">{countdown}</Text>
     {:else}
-    <div class="game">
-        <SudokuBoardMulti on:solved|once={() => endMatch(roomId)} bind:this={boardComponent} bind:currentBoard {board} {fullBoard} {roomId} {slot}/>
-        <ControllerMulti bind:this={controllerComponent} board={boardComponent}/>
-        <ProgressBoard {opponentSlot} {roomId}/>
-        {#if ended}
-        <Modal opened centered withCloseButton={false}>
-            <Text align="center" size={50} color={slot === winner ? "green" : "red"}>{slot === winner ? "You won!" : "You lost..."}</Text>
-            <Space h={100}/>
-            <Button href="/" color="grape">BACK TO MENU</Button>
-        </Modal>
-        {/if}
+    
+    <div class="game-wrapper">
+        <Text align="center" size={40}>{formatTime(time)}</Text>
+        <div class="game">
+            <SudokuBoardMulti on:solved|once={() => endMatch(roomId, slot)} bind:this={boardComponent} bind:currentBoard bind:remainingCells {board} {fullBoard} {roomId} {slot}/>
+            <ControllerMulti bind:this={controllerComponent} bind:time board={boardComponent}/>
+            <ProgressBoard {opponentSlot} {roomId}/>
+            {#if ended}
+            <Modal opened centered withCloseButton={false}>
+                <Text align="center" size={50} color={winner === "Draw" ? "yellow" : winner === slot ? "green" : "red"}>{winner === "Draw" ? "A Draw!" : winner === slot ? "You Won!" : "You Lost..."}</Text>
+                <Space h={100}/>
+                <Button href="/" color="grape">BACK TO MENU</Button>
+            </Modal>
+            {/if}
+        </div>
     </div>
     {/if}
 {:else}
@@ -343,13 +397,19 @@
 {/if}
 
 <style lang="scss">
-    .game {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
+    .game-wrapper {
+        display: flex;
+        flex-direction: column;
 
-        margin-top: 4rem;
+        .game {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+
+            margin-top: 4rem;
+        }
     }
+
     .room {
         display: flex;
         flex-direction: column;

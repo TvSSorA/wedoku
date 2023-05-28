@@ -5,7 +5,7 @@
 	import { cellStyles } from '$lib/frontend/ColorScheme';
 	import { blockFromCoords } from '$lib/utils';
 	import type { Readable } from 'svelte/store';
-	import { doc, setDoc } from 'firebase/firestore';
+	import { doc, increment, setDoc } from 'firebase/firestore';
 	import { db } from '$lib/firebase/app';
 
 	export let roomId: string;
@@ -18,7 +18,8 @@
 
 	export let currentBoard: number[][];
 	let rowMap: number[][], colMap: number[][], blockMap: number[][];
-	let remainingCells = 0, errors = 0;
+	export let remainingCells = 0; 
+	let errors = 0;
 
 	currentBoard = board.map(row => [...row]); // Clone the board
 	rowMap = Array(9).fill(0).map(_ => Array(10).fill(0));
@@ -85,6 +86,14 @@
 		updateInternalStates(row, col, block, oldDigit, digit);
 		currentBoard[row][col] = digit;
 		updateFirebaseBoard();
+
+		if (digit !== 0 && digit !== fullBoard[row][col]) {
+			setDoc(doc(db, "rooms", roomId), {
+				[slot]: {
+					mistakes: increment(1)
+				}
+			}, { merge: true })
+		}
 	}
 
 	export function erase()

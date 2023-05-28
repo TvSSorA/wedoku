@@ -13,6 +13,17 @@
         expert: "red",
         evil: "purple"
     }
+
+    function formatTime(ms: number) {	
+		const s = Math.floor(ms / 1000);
+		const m = Math.floor(s / 60);
+		const h = Math.floor(m / 60);
+		return (
+			(h ? `${h.toString().padStart(2, '0')}:` : '') +
+			`${(m % 60).toString().padStart(2, '0')}:` +
+			`${(s % 60).toString().padStart(2, '0')}`
+		);
+	}
 </script>
 
 <svelte:head>
@@ -43,14 +54,10 @@
             </thead>
             <tbody>
                 {#each data.soloGames as soloGame, i}
-                    {@const time = Math.floor((soloGame.time + 60000) / 1000)}
-                    {@const hours = Math.floor(time / 3600)}
-                    {@const minutes = Math.floor((time % 3600) / 60)}
-                    {@const seconds = time % 60}
                     <tr>
                         <td><Text align="center">{i + 1}</Text></td>
                         <td><Text align="center" color={difficultyColors[soloGame.difficulty]}>{soloGame.difficulty.charAt(0).toUpperCase() + soloGame.difficulty.slice(1)}</Text></td>
-                        <td><Text align="center">{hours !== 0 ? `${hours}:` : ""}{minutes}:{seconds}</Text></td>
+                        <td><Text align="center">{formatTime(soloGame.time + 60000)}</Text></td>
                     </tr>
                 {/each}
             </tbody>

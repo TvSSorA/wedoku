@@ -11,6 +11,7 @@
         function createRoom(roomID: string) {
             setDoc(doc(db, "rooms", roomID), {
                 countdown: 3,
+                time: 3600000,
                 started: false,
                 ended: false,
                 winner: null,
@@ -21,6 +22,7 @@
                         name: null,
                         avatar: null
                     },
+                    mistakes: 0,
                     owner: false
                 },
                 red: {
@@ -29,6 +31,7 @@
                         name: null,
                         avatar: null
                     },
+                    mistakes: 0,
                     owner: false
                 }
             });

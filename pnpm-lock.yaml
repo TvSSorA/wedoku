@@ -12,6 +12,7 @@ specifiers:
   '@types/three': ^0.152.0
   '@typescript-eslint/eslint-plugin': ^5.59.5
   '@typescript-eslint/parser': ^5.59.5
+  date-fns: ^2.30.0
   eslint: ^8.40.0
   eslint-config-prettier: ^8.8.0
   eslint-plugin-svelte3: ^4.0.0
@@ -38,6 +39,7 @@ dependencies:
   '@fortawesome/free-solid-svg-icons': 6.4.0
   '@svelteuidev/composables': 0.12.0
   '@svelteuidev/core': 0.12.0_ngw245reix3zutmddsgmoe7zwm
+  date-fns: 2.30.0
   firebase: 9.22.0
   firebase-admin: 11.8.0
   howler: 2.2.3
@@ -90,6 +92,13 @@ packages:
       '@babel/types': 7.21.5
     dev: false
     optional: true
+
+  /@babel/runtime/7.22.3:
+    resolution: {integrity: sha512-XsDuspWKLUsxwCp6r7EhsExHtYfbe5oAGQ19kqngTdCPUoPQzOPdUbD/pB9PJiwb2ptYKQDjSJT3R6dC+EPqfQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.11
+    dev: false
 
   /@babel/types/7.21.5:
     resolution: {integrity: sha512-m4AfNvVF2mVC/F7fDEdH2El3HzUg9It/XsCxZiOTTA3m3qYfcSVSbTfM6Q9xG+hYDniZssYhlXKKUMD5m8tF4Q==}
@@ -1754,6 +1763,13 @@ packages:
       which: 2.0.2
     dev: true
 
+  /date-fns/2.30.0:
+    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
+    engines: {node: '>=0.11'}
+    dependencies:
+      '@babel/runtime': 7.22.3
+    dev: false
+
   /date-time/3.1.0:
     resolution: {integrity: sha512-uqCUKXE5q1PNBXjPqvwhwJf9SwMoAHBgWJ6DcrnS5o+W2JOiIILl0JEdVD8SGujrNS02GGxgwAg2PN2zONgtjg==}
     engines: {node: '>=6'}
@@ -3180,6 +3196,10 @@ packages:
     engines: {node: '>=8.10.0'}
     dependencies:
       picomatch: 2.3.1
+
+  /regenerator-runtime/0.13.11:
+    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
+    dev: false
 
   /require-directory/2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
